@@ -1,0 +1,42 @@
+﻿@page "/login"
+
+<h3>Login</h3>
+
+<EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label for="username">Username</label>
+        <InputText id="username" @bind-Value="loginModel.Username" placeholder="Enter username" />
+    </div>
+
+    <div>
+        <label for="password">Password</label>
+        <InputText id="password" @bind-Value="loginModel.Password" placeholder="Enter password" type="password" />
+    </div>
+
+    <div>
+        <button type="submit">Login</button>
+    </div>
+</EditForm>
+
+@code {
+    [Inject] NavigationManager NavigationManager { get; set; }
+
+    private LoginModel loginModel = new LoginModel();
+
+    private async Task HandleLogin()
+    {
+        // Perform login logic here (e.g., validate credentials, set authentication state)
+
+        // On successful login, navigate to the home page or the page that was initially requested
+        NavigationManager.NavigateTo("/attendance");
+    }
+
+    public class LoginModel
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
+}

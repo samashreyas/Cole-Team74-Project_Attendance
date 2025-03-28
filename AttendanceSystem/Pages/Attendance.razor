@@ -1,0 +1,46 @@
+﻿@page "/attendance"
+@using AttendanceSystem.Data
+@using AttendanceSystem.Models
+@using Microsoft.EntityFrameworkCore
+@inject ApplicationDbContext DbContext
+
+<h3>Your Attendance</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (userAttendance != null && userAttendance.Any())
+        {
+            @foreach (var record in userAttendance)
+            {
+                <tr>
+                    <td>@record.Date.ToShortDateString()</td>
+                    <td>@(record.IsPresent ? "Present" : "Absent")</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="2">No attendance records found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<AttendanceRecord> userAttendance = new List<AttendanceRecord>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userName = "SomeUser";  // Replace with logic to get the logged-in user's name
+        userAttendance = await DbContext.AttendanceRecords
+            .Where(a => a.StudentName == userName)
+            .ToListAsync();
+    }
+}
