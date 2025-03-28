@@ -20,7 +20,6 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
     {
         if (_isInitialized)
         {
-            // Perform token retrieval and parsing only if the component has been rendered
             var token = await _localStorageService.GetItemAsync<string>("authToken");
 
             var identity = string.IsNullOrEmpty(token)
@@ -32,7 +31,6 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
             return new AuthenticationState(user);
         }
 
-        // Return an empty user if not initialized yet
         return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
     }
 
@@ -53,7 +51,6 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
         NotifyAuthenticationStateChanged(authState);
     }
 
-    // Helper method to parse claims from JWT
     private IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
     {
         var claims = new List<Claim>();
@@ -68,7 +65,6 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
         return claims;
     }
 
-    // Handle when the component has finished rendering and we can safely access JavaScript interop
     public void MarkInitialized()
     {
         _isInitialized = true;

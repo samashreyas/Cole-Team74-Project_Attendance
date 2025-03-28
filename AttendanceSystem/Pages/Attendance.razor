@@ -38,7 +38,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var userName = "SomeUser";  // Replace with logic to get the logged-in user's name
+        var userName = "SomeUser"; 
         userAttendance = await DbContext.AttendanceRecords
             .Where(a => a.StudentName == userName)
             .ToListAsync();
