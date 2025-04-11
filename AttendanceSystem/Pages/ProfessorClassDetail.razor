@@ -1,0 +1,325 @@
+@page "/professor/class/{Id:int}"
+@using System.Globalization
+@inject IJSRuntime JSRuntime
+@rendermode InteractiveServer
+
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">@CurrentClass?.Name - Manage Attendance</h1>
+
+    @if (CurrentClass != null)
+    {
+        <div class="bg-white shadow rounded-lg p-6 mb-6">
+            <div class="bg-white shadow rounded-lg p-6 mb-6">
+    <h2 class="text-xl font-semibold mb-4">Attendance Summary</h2>
+    <p>Total Students: @CurrentClass.Students.Count</p>
+    <p>Present Today: @CurrentClass.Students.Count(s => s.AttendanceRecords.Any(r => r.Date.Date == DateTime.Today && r.Status == "Present"))</p>
+    <p>Absent Today: @CurrentClass.Students.Count(s => s.AttendanceRecords.Any(r => r.Date.Date == DateTime.Today && r.Status == "Absent"))</p>
+</div>
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold">Record Attendance</h2>
+                <button style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;"
+
+                        @onclick="AddTodayAttendanceForAll">
+                    Mark All Present
+                </button>
+                <button style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;"
+
+                        @onclick="RemoveTodayAttendanceForAll">
+                    Mark All Absent
+                </button>
+            </div>
+
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="border p-2 text-left">Date</th>
+                        @foreach (var student in CurrentClass.Students)
+                        {
+                            <th class="border p-2 text-left">@student.Name</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var date in DistinctAttendanceDates.OrderByDescending(d => d))
+                    {
+                        <tr>
+                            <td class="border p-2">@date.ToString("MM/dd/yyyy")</td>
+                            @foreach (var student in CurrentClass.Students)
+                            {
+                                var record = student.AttendanceRecords.FirstOrDefault(r => r.Date.Date == date.Date);
+                                <td class="border p-2">
+                                    <span class="@(record?.Status == "Present" ? "text-green-600" : "text-red-600")">
+                                        @(record?.Status ?? "N/A")
+                                    </span>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        
+            <h2 class="text-xl font-semibold mb-4">Enrolled Students</h2>
+            <table class="w-full border-collapse mb-6">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="border p-2 text-left">Name</th>
+                        <th class="border p-2 text-left">Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var student in CurrentClass.Students)
+                    {
+                        <tr>
+                            <td class="border p-2">@student.Name</td>
+                            <td class="border p-2">@student.Email</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    }
+    else
+    {
+        <p class="text-red-600">Class not found.</p>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private ClassItem? CurrentClass { get; set; }
+    private HashSet<DateTime> DistinctAttendanceDates { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        // Sample data for professors
+        var classes = new List<ClassItem>
+{
+    new ClassItem
+    {
+        Id = 10,
+        Name = "Computer Science 101",
+        Instructor = "Dr. Johnson",
+        Time = "Tue/Thu 9:00 AM",
+        Room = "Room 210",
+        Credits = 3,
+        Students = new List<Student>
+        {
+            new Student
+            {
+                Name = "Alex Wilson",
+                Email = "alex@example.com",
+                AttendanceRecords = new List<AttendanceRecord>
+                {
+                    new AttendanceRecord { Date = DateTime.Now.AddDays(-7), Status = "Present" },
+                    new AttendanceRecord { Date = DateTime.Today, Status = "Present" }
+                }
+            },
+            new Student
+            {
+                Name = "Jamie Parker",
+                Email = "jamie@example.com",
+                AttendanceRecords = new List<AttendanceRecord>
+                {
+                    new AttendanceRecord { Date = DateTime.Now.AddDays(-7), Status = "Absent" },
+                    new AttendanceRecord { Date = DateTime.Today, Status = "Absent" }
+                }
+            },
+            new Student
+            {
+                Name = "Casey Thompson",
+                Email = "casey@example.com",
+                AttendanceRecords = new List<AttendanceRecord>
+                {
+                    new AttendanceRecord { Date = DateTime.Now.AddDays(-7), Status = "Present" },
+                    new AttendanceRecord { Date = DateTime.Today, Status = "Present" }
+                }
+            }
+        }
+    },
+    new ClassItem
+    {
+        Id = 11,
+        Name = "Data Structures",
+        Instructor = "Dr. Chen",
+        Time = "Mon/Wed 1:00 PM",
+        Room = "Room 110",
+        Credits = 4,
+        Students = new List<Student>
+        {
+            new Student
+            {
+                Name = "Taylor Reed",
+                Email = "taylor@example.com",
+                AttendanceRecords = new List<AttendanceRecord>
+                {
+                    new AttendanceRecord { Date = DateTime.Now.AddDays(-7), Status = "Present" },
+                    new AttendanceRecord { Date = DateTime.Today, Status = "Present" }
+                }
+            },
+            new Student
+            {
+                Name = "Morgan Smith",
+                Email = "morgan@example.com",
+                AttendanceRecords = new List<AttendanceRecord>
+                {
+                    new AttendanceRecord { Date = DateTime.Now.AddDays(-7), Status = "Present" },
+                    new AttendanceRecord { Date = DateTime.Today, Status = "Present" }
+                }
+            },
+            new Student
+            {
+                Name = "Jordan Lee",
+                Email = "jordan@example.com",
+                AttendanceRecords = new List<AttendanceRecord>
+                {
+                    new AttendanceRecord { Date = DateTime.Now.AddDays(-7), Status = "Absent" },
+                    new AttendanceRecord { Date = DateTime.Today, Status = "Present" }
+                }
+            }
+        }
+    },
+    new ClassItem
+    {
+        Id = 12,
+        Name = "Software Engineering",
+        Instructor = "Dr. Rodriguez",
+        Time = "Fri 11:00 AM",
+        Room = "Room 305",
+        Credits = 3,
+        Students = new List<Student>
+        {
+            new Student
+            {
+                Name = "Riley Johnson",
+                Email = "riley@example.com",
+                AttendanceRecords = new List<AttendanceRecord>
+                {
+                    new AttendanceRecord { Date = DateTime.Now.AddDays(-7), Status = "Present" },
+                    new AttendanceRecord { Date = DateTime.Today, Status = "Absent" }
+                }
+            },
+            new Student
+            {
+                Name = "Quinn Garcia",
+                Email = "quinn@example.com",
+                AttendanceRecords = new List<AttendanceRecord>
+                {
+                    new AttendanceRecord { Date = DateTime.Now.AddDays(-7), Status = "Present" },
+                    new AttendanceRecord { Date = DateTime.Today, Status = "Absent" }
+                }
+            },
+            new Student
+            {
+                Name = "Avery Kim",
+                Email = "avery@example.com",
+                AttendanceRecords = new List<AttendanceRecord>
+                {
+                    new AttendanceRecord { Date = DateTime.Now.AddDays(-7), Status = "Absent" },
+                    new AttendanceRecord { Date = DateTime.Today, Status = "Present" }
+                }
+            }
+        }
+    }
+};
+
+        CurrentClass = classes.FirstOrDefault(c => c.Id == Id);
+
+        if (CurrentClass != null)
+        {
+            // Gather distinct attendance dates from all students
+            DistinctAttendanceDates = CurrentClass.Students
+                .SelectMany(s => s.AttendanceRecords)
+                .Select(r => r.Date.Date)
+                .ToHashSet();
+        }
+    }
+
+   private void AddTodayAttendanceForAll()
+{
+    if (CurrentClass == null) return;
+
+    var today = DateTime.Now.Date;
+
+    foreach (var student in CurrentClass.Students)
+    {
+        // Check if the student already has an attendance record for today
+        var existingRecord = student.AttendanceRecords.FirstOrDefault(r => r.Date.Date == today);
+
+        if (existingRecord != null)
+        {
+            // Update the existing record to "Present"
+            existingRecord.Status = "Present";
+        }
+        else
+        {
+            // Add a new attendance record for today with "Present"
+            student.AttendanceRecords.Add(new AttendanceRecord
+            {
+                Date = today,
+                Status = "Present"
+            });
+        }
+    }
+
+    DistinctAttendanceDates.Add(today);
+    StateHasChanged();
+}
+
+
+private void RemoveTodayAttendanceForAll()
+{
+    if (CurrentClass == null) return;
+
+    var today = DateTime.Now.Date;
+
+    foreach (var student in CurrentClass.Students)
+    {
+        var alreadyMarked = student.AttendanceRecords.Any(r => r.Date.Date == today);
+        if (!alreadyMarked)
+        {
+            student.AttendanceRecords.Add(new AttendanceRecord
+            {
+                Date = today,
+                Status = "Absent"
+            });
+        }
+        else
+        {
+            // Update the record to be "Absent" if the student was marked present
+            var record = student.AttendanceRecords.First(r => r.Date.Date == today);
+            record.Status = "Absent";
+        }
+    }
+
+    DistinctAttendanceDates.Add(today);
+    StateHasChanged();
+}
+
+
+    public class ClassItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+        public string Instructor { get; set; } = "";
+        public string Time { get; set; } = "";
+        public string Room { get; set; } = "";
+        public int Credits { get; set; }
+        public List<Student> Students { get; set; } = new();
+    }
+
+    public class Student
+    {
+        public string Name { get; set; } = "";
+        public string Email { get; set; } = "";
+        public List<AttendanceRecord> AttendanceRecords { get; set; } = new();
+    }
+
+    public class AttendanceRecord
+    {
+        public DateTime Date { get; set; }
+        public string Status { get; set; } = "Absent";
+    }
+}

@@ -1,0 +1,82 @@
+@page "/professor"
+
+<PageTitle>My Classes (Professor)</PageTitle>
+
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">My Classes (Professor)</h1>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        @foreach (var classItem in ProfessorClasses)
+        {
+            <a href="/professor/class/@classItem.Id" class="no-underline">
+                <div class="bg-white shadow rounded-lg p-4 hover:bg-gray-50 cursor-pointer">
+                    <h2 class="text-xl font-semibold mb-2">@classItem.Name</h2>
+                    <div class="text-gray-600">
+                        <p>Time: @classItem.Time</p>
+                        <p>Room: @classItem.Room</p>
+                        <div class="mt-2 flex justify-between items-center">
+                            <span class="text-sm">Students Enrolled: @classItem.TotalStudents</span>
+                            <span class="text-sm text-blue-600">Present Today: @CountPresentToday(classItem)</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        }
+    </div>
+</div>
+
+@code {
+    private List<ProfessorClassItem> ProfessorClasses = new List<ProfessorClassItem>
+    {
+        new ProfessorClassItem(10, "Computer Science 101", "Tue/Thu 9:00 AM", "Room 210", 3, new List<AttendanceRecord>
+        {
+            new AttendanceRecord { Date = DateTime.Today, Status = "Present" },
+            new AttendanceRecord { Date = DateTime.Today, Status = "Absent" },
+            new AttendanceRecord { Date = DateTime.Today, Status = "Present" }
+        }),
+        new ProfessorClassItem(11, "Data Structures", "Mon/Wed 1:00 PM", "Room 110", 3, new List<AttendanceRecord>
+        {
+            new AttendanceRecord { Date = DateTime.Today, Status = "Present" },
+            new AttendanceRecord { Date = DateTime.Today, Status = "Present" },
+            new AttendanceRecord { Date = DateTime.Today, Status = "Present" }
+        }),
+        new ProfessorClassItem(12, "Software Engineering", "Fri 11:00 AM", "Room 305", 3, new List<AttendanceRecord>
+        {
+            new AttendanceRecord { Date = DateTime.Today, Status = "Absent" },
+            new AttendanceRecord { Date = DateTime.Today, Status = "Absent" },
+            new AttendanceRecord { Date = DateTime.Today, Status = "Present" }
+        })
+    };
+
+    private int CountPresentToday(ProfessorClassItem classItem)
+    {
+        return classItem.AttendanceRecords
+            .Where(r => r.Date.Date == DateTime.Today && r.Status == "Present")
+            .Count();
+    }
+
+    public class ProfessorClassItem
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; }
+        public string? Time { get; set; }
+        public string? Room { get; set; }
+        public int TotalStudents { get; set; }
+        public List<AttendanceRecord> AttendanceRecords { get; set; }
+
+        public ProfessorClassItem(int id, string name, string time, string room, int totalStudents, List<AttendanceRecord> attendanceRecords)
+        {
+            Id = id;
+            Name = name;
+            Time = time;
+            Room = room;
+            TotalStudents = totalStudents;
+            AttendanceRecords = attendanceRecords ?? new List<AttendanceRecord>();
+        }
+    }
+
+    public class AttendanceRecord
+    {
+        public DateTime Date { get; set; }
+        public required string Status { get; set; }
+    }
+}

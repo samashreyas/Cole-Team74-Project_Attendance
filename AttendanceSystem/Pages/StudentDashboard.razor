@@ -1,0 +1,99 @@
+@page "/student"
+
+<PageTitle>My Classes (Student)</PageTitle>
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">My Classes (Student)</h1>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        @foreach (var classItem in StudentClasses)
+        {
+            <a href="student/class/@classItem.Id" class="no-underline">
+                <div class="bg-white shadow rounded-lg p-4 hover:bg-gray-50 cursor-pointer">
+                    <h2 class="text-xl font-semibold mb-2">@classItem.Name</h2>
+                    <div class="text-gray-600">
+                        <p>Instructor: @classItem.Instructor</p>
+                        <p>Time: @classItem.Time</p>
+                        <div class="mt-2 flex justify-between items-center">
+                            <span class="text-sm">Attendance: @CalculateAttendancePercentage(classItem)%</span>
+                            <span class="text-sm text-@(GetAttendanceColor(classItem))">
+                                @(CalculateAttendancePercentage(classItem) >= 75 ? "Good" : "Low")
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        }
+    </div>
+</div>
+
+@code {
+    private List<ClassItem> StudentClasses = new List<ClassItem>
+    {
+        new ClassItem(1, "Mathematics 101", "Dr. Smith", "Mon/Wed 10:00 AM", "Science Building, Room 302", 3, new List<AttendanceRecord>
+    {
+        new AttendanceRecord { Date = DateTime.Now.AddDays(-7), Status = "Present" },
+        new AttendanceRecord { Date = DateTime.Now.AddDays(-14), Status = "Absent" },
+        new AttendanceRecord { Date = DateTime.Now.AddDays(-21), Status = "Present" }
+    }),
+    new ClassItem(2, "Computer Science 205", "Prof. Johnson", "Tue/Thu 1:00 PM", "Tech Center, Room 105", 4, new List<AttendanceRecord>
+    {
+        new AttendanceRecord { Date = DateTime.Now.AddDays(-5), Status = "Present" },
+        new AttendanceRecord { Date = DateTime.Now.AddDays(-12), Status = "Present" },
+        new AttendanceRecord { Date = DateTime.Now.AddDays(-19), Status = "Absent" }
+    }),
+    new ClassItem(3, "Computer Science 301", "Prof. Sam", "Fri 1:00 PM", "Tech Center, Room 301", 4, new List<AttendanceRecord>
+    {
+        new AttendanceRecord { Date = DateTime.Now.AddDays(-5), Status = "Present" },
+        new AttendanceRecord { Date = DateTime.Now.AddDays(-12), Status = "Present" },
+        new AttendanceRecord { Date = DateTime.Now.AddDays(-19), Status = "Absent" }
+    })
+    };
+
+    private double CalculateAttendancePercentage(ClassItem classItem)
+    {
+        if (classItem.AttendanceRecords.Count == 0) return 100;
+        var presentCount = classItem.AttendanceRecords.Count(r => r.Status == "Present");
+        return Math.Round((double)presentCount / classItem.AttendanceRecords.Count * 100, 2);
+    }
+
+    private string GetAttendanceColor(ClassItem classItem)
+    {
+        var percentage = CalculateAttendancePercentage(classItem);
+        return percentage >= 75 ? "green-600" : "red-600";
+    }
+
+    
+  public class ClassItem
+{
+    // Make Id and Credits nullable
+    public int? Id { get; set; }
+    
+    // Make Name, Instructor, Time, and Room nullable as well
+    public string? Name { get; set; }
+    public string? Instructor { get; set; }
+    public string? Time { get; set; }
+    public string? Room { get; set; }  // Nullable property (Room can be unknown)
+    
+    // Credits are nullable as well
+    public int? Credits { get; set; }
+    
+    // Ensure AttendanceRecords is never null (it defaults to an empty list)
+    public List<AttendanceRecord> AttendanceRecords { get; set; } = new List<AttendanceRecord>();
+         public ClassItem(int id, string name, string instructor, string time, string room, int credits, List<AttendanceRecord> attendanceRecords)
+    {
+        Id = id;
+        Name = name;
+        Instructor = instructor;
+        Time = time;
+        Room = room;
+        Credits = credits;
+        AttendanceRecords = attendanceRecords ?? new List<AttendanceRecord>();  // Ensure it's not null
+    }
+}
+
+
+    public class AttendanceRecord
+    {
+        public DateTime Date { get; set; }
+    public required string Status { get; set; } = "Absent"; // Default value
+    }
+}
