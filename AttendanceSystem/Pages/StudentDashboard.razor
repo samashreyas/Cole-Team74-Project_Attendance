@@ -1,4 +1,117 @@
 @page "/student"
+@using Microsoft.EntityFrameworkCore
+@using AttendanceSystem.Data.Models
+@inject AttendanceDbContext DbContext
+
+<PageTitle>My Classes (Student)</PageTitle>
+
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">My Classes (Student)</h1>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        @foreach (var classItem in StudentClasses)
+        {
+            <a href="student/class/@classItem.Id" class="no-underline">
+                <div class="bg-white shadow rounded-lg p-4 hover:bg-gray-50 cursor-pointer">
+                    <h2 class="text-xl font-semibold mb-2">@classItem.Name</h2>
+                    <div class="text-gray-600">
+                        <p>Instructor: @classItem.Instructor</p>
+                        <p>Time: @classItem.Time</p>
+                        <div class="mt-2 flex justify-between items-center">
+                            <span class="text-sm">Attendance: @CalculateAttendancePercentage(classItem)%</span>
+                            <span class="text-sm text-@(GetAttendanceColor(classItem))">
+                                @(CalculateAttendancePercentage(classItem) >= 75 ? "Good" : "Low")
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        }
+    </div>
+</div>
+
+@code {
+    private List<ClassItem> StudentClasses = new List<ClassItem>();
+
+    protected override async Task OnInitializedAsync()
+{
+    // Retrieve the classes for the student from the database
+    var studentId = 1;  // Replace with actual logged-in student ID
+
+   var classes = await DbContext.Classes
+    .Include(c => c.Instructor) // Ensure Instructor is loaded
+    .Where(c => c.StudentCourses.Any(sc => sc.StudentID == 1)) // Filter by StudentID = 1
+    .ToListAsync();
+
+    // For each class, load attendance records properly
+    StudentClasses = new List<ClassItem>();
+    foreach (var c in classes)
+    {
+        var attendanceRecords = await DbContext.AttendanceRecords
+    .Where(ar => ar.ClassID == c.ClassID)  // Replace ClassID with the correct reference
+    .Select(ar => new AttendanceRecord
+    {
+        Date = ar.Date,
+        Status = ar.Status
+    })
+    .ToListAsync();
+
+
+        StudentClasses.Add(new ClassItem(
+            c.ClassID,
+            c.Name,
+            c.Instructor?.Name ?? "Unknown",
+            c.Time,
+            c.Room,
+            c.TotalStudents,
+            attendanceRecords
+        ));
+    }
+}
+
+
+    private double CalculateAttendancePercentage(ClassItem classItem)
+    {
+        if (classItem.AttendanceRecords.Count == 0) return 100;
+        var presentCount = classItem.AttendanceRecords.Count(r => r.Status == "Present");
+        return Math.Round((double)presentCount / classItem.AttendanceRecords.Count * 100, 2);
+    }
+
+    private string GetAttendanceColor(ClassItem classItem)
+    {
+        var percentage = CalculateAttendancePercentage(classItem);
+        return percentage >= 75 ? "green-600" : "red-600";
+    }
+
+    public class ClassItem
+    {
+        public int? Id { get; set; }
+        public string? Name { get; set; }
+        public string? Instructor { get; set; }
+        public string? Time { get; set; }
+        public string? Room { get; set; }
+        public int? Credits { get; set; }
+        public List<AttendanceRecord> AttendanceRecords { get; set; } = new List<AttendanceRecord>();
+
+        public ClassItem(int id, string name, string instructor, string time, string room, int credits, List<AttendanceRecord> attendanceRecords)
+        {
+            Id = id;
+            Name = name;
+            Instructor = instructor;
+            Time = time;
+            Room = room;
+            Credits = credits;
+            AttendanceRecords = attendanceRecords ?? new List<AttendanceRecord>();
+        }
+    }
+
+    public class AttendanceRecord
+    {
+        public DateTime Date { get; set; }
+        public required string Status { get; set; } = "Absent";
+    }
+}
+@* 
+@page "/student"
 
 <PageTitle>My Classes (Student)</PageTitle>
 <div class="container mx-auto p-4">
@@ -96,4 +209,4 @@
         public DateTime Date { get; set; }
     public required string Status { get; set; } = "Absent"; // Default value
     }
-}
+} *@

@@ -4,24 +4,24 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using AttendanceSystem.Data;
 using AttendanceSystem.Areas.Identity;
-using AttendanceSystem.Services; // Add this namespace for your UserService
+using AttendanceSystem.Data.Models;  // Add this for AttendanceDbContext
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Original SQL Server connection for Identity
-var identityConnectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? 
+var identityConnectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
     throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(identityConnectionString));
+// Add MySQL connection for Attendance System
+var attendanceConnectionString = builder.Configuration.GetConnectionString("AttendanceConnection") ??
+    throw new InvalidOperationException("Connection string 'AttendanceConnection' not found.");
+
+builder.Services.AddDbContext<AttendanceDbContext>(options =>
+    options.UseMySql(attendanceConnectionString, ServerVersion.AutoDetect(attendanceConnectionString)));
+
+// Registering other services for Identity and Authentication
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
-
-// Register the UserService
-builder.Services.AddScoped<IUserService, UserService>();
-
+// Register services
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddBlazoredLocalStorage();
