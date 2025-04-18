@@ -1,0 +1,89 @@
+﻿@page "/upload"
+@inject IWebHostEnvironment Env
+
+<h3>Upload Tab-Delimited File</h3>
+
+<InputFile OnChange="HandleFileSelected" accept=".txt,.tsv" />
+
+<p>@debugMessage</p>
+
+@if (headers != null)
+{
+    <h4>Parsed Data:</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                @foreach (var header in headers)
+                {
+                    <th>@header</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in records)
+            {
+                <tr>
+                    @foreach (var field in row)
+                    {
+                        <td>@field</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    string[]? headers;
+    List<string[]> records = new();
+    string debugMessage = "";
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            debugMessage = "Starting upload...";
+
+            var file = e.File;
+            debugMessage = $"Selected file: {file.Name}";
+
+            var uploadsFolder = Path.Combine(Env.ContentRootPath, "Uploads");
+            Directory.CreateDirectory(uploadsFolder);
+            var filePath = Path.Combine(uploadsFolder, file.Name);
+
+            // Save file and ensure it's properly closed
+            using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+            {
+                await file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024).CopyToAsync(fs);
+            }
+
+            debugMessage = $"File saved to: {filePath}";
+
+            // Read lines and parse manually
+            var lines = await File.ReadAllLinesAsync(filePath);
+            debugMessage = $"Read {lines.Length} lines from file.";
+
+            if (lines.Length > 0)
+            {
+                headers = lines[0].Split('\t');
+                records.Clear();
+
+                for (int i = 1; i < lines.Length; i++)
+                {
+                    var fields = lines[i].Split('\t');
+                    records.Add(fields);
+                }
+
+                debugMessage = $"Finished parsing manually. Rows: {records.Count}";
+            }
+            else
+            {
+                debugMessage = "File was empty.";
+            }
+        }
+        catch (Exception ex)
+        {
+            debugMessage = $"Error: {ex.Message}";
+        }
+    }
+}
