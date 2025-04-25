@@ -1,13 +1,3 @@
-/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/AttendanceSystem.csproj.AssemblyReference.cache
-/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/AttendanceSystem.GeneratedMSBuildEditorConfig.editorconfig
-/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/AttendanceSystem.AssemblyInfoInputs.cache
-/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/AttendanceSystem.AssemblyInfo.cs
-/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/AttendanceSystem.csproj.CoreCompileInputs.cache
-/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/AttendanceSystem.MvcApplicationPartsAssemblyInfo.cs
-/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/AttendanceSystem.MvcApplicationPartsAssemblyInfo.cache
-/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/AttendanceSystem.RazorAssemblyInfo.cache
-/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/AttendanceSystem.RazorAssemblyInfo.cs
-/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/AttendanceSystem.sourcelink.json
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/bin/Debug/net9.0/appsettings.Development.json
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/bin/Debug/net9.0/appsettings.json
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/bin/Debug/net9.0/AttendanceSystem.staticwebassets.runtime.json
@@ -74,6 +64,16 @@
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/bin/Debug/net9.0/runtimes/win-x64/native/krbcc64.dll
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/bin/Debug/net9.0/runtimes/win/lib/net6.0/System.Runtime.Caching.dll
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/bin/Debug/net9.0/runtimes/win/lib/net8.0/System.Windows.Extensions.dll
+/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/AttendanceSystem.csproj.AssemblyReference.cache
+/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/AttendanceSystem.GeneratedMSBuildEditorConfig.editorconfig
+/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/AttendanceSystem.AssemblyInfoInputs.cache
+/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/AttendanceSystem.AssemblyInfo.cs
+/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/AttendanceSystem.csproj.CoreCompileInputs.cache
+/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/AttendanceSystem.MvcApplicationPartsAssemblyInfo.cs
+/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/AttendanceSystem.MvcApplicationPartsAssemblyInfo.cache
+/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/AttendanceSystem.RazorAssemblyInfo.cache
+/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/AttendanceSystem.RazorAssemblyInfo.cs
+/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/AttendanceSystem.sourcelink.json
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/scopedcss/Shared/MainLayout.razor.rz.scp.css
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/scopedcss/Shared/NavMenu.razor.rz.scp.css
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/scopedcss/bundle/AttendanceSystem.styles.css
@@ -144,8 +144,6 @@
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/5qxtvu2tfb-10uzszoped.gz
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/qnb7kx5ips-9ecj4fqnpz.gz
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/h188nej5jr-69lzu0n0bb.gz
-/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/ykxdqzgyl7-kga7orn96f.gz
-/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/veb82wehl1-kga7orn96f.gz
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/staticwebassets.build.json
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/staticwebassets.development.json
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/staticwebassets.build.endpoints.json
@@ -161,3 +159,5 @@
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/AttendanceSystem.pdb
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/AttendanceSystem.genruntimeconfig.cache
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/ref/AttendanceSystem.dll
+/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/ykxdqzgyl7-yzxvpipnch.gz
+/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/veb82wehl1-yzxvpipnch.gz

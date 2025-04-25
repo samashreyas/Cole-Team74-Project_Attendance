@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "9QhJmCwRHZoVV9EYe5fUbN2hDlpBywfJZOzqvMq9qZM=",
+  "Hash": "t+KBoWYua1ZZhSX1Xb7cd/zc7a/8oBILw+ht2HhE/7k=",
   "Source": "AttendanceSystem",
   "BasePath": "_content/AttendanceSystem",
   "Mode": "Default",
@@ -2432,12 +2432,12 @@
       "OriginalItemSpec": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/wwwroot/css/open-iconic/font/fonts/open-iconic.otf"
     },
     {
-      "Identity": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/veb82wehl1-kga7orn96f.gz",
+      "Identity": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/veb82wehl1-yzxvpipnch.gz",
       "SourceId": "AttendanceSystem",
       "SourceType": "Computed",
       "ContentRoot": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/",
       "BasePath": "_content/AttendanceSystem",
-      "RelativePath": "AttendanceSystem#[.{fingerprint=kga7orn96f}]!.bundle.scp.css.gz",
+      "RelativePath": "AttendanceSystem#[.{fingerprint=yzxvpipnch}]!.bundle.scp.css.gz",
       "AssetKind": "All",
       "AssetMode": "Reference",
       "AssetRole": "Alternative",
@@ -2446,8 +2446,8 @@
       "RelatedAsset": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/scopedcss/projectbundle/AttendanceSystem.bundle.scp.css",
       "AssetTraitName": "Content-Encoding",
       "AssetTraitValue": "gzip",
-      "Fingerprint": "6di97hedbf",
-      "Integrity": "OjCSSSxR3XsQw6bbOqi91eLV7Wzu+y6NIa9AB1mWpMM=",
+      "Fingerprint": "m6zjnkp4re",
+      "Integrity": "IvBa4TrU9GXI0nBJyUQHo/u1td/Y3lD5jZgD1M0Sbto=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/scopedcss/projectbundle/AttendanceSystem.bundle.scp.css"
@@ -2579,12 +2579,12 @@
       "OriginalItemSpec": "/Users/stevenmaddela/.nuget/packages/microsoft.aspnetcore.identity.ui/7.0.18/staticwebassets/V5/lib/jquery/LICENSE.txt"
     },
     {
-      "Identity": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/ykxdqzgyl7-kga7orn96f.gz",
+      "Identity": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/ykxdqzgyl7-yzxvpipnch.gz",
       "SourceId": "AttendanceSystem",
       "SourceType": "Computed",
       "ContentRoot": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/",
       "BasePath": "_content/AttendanceSystem",
-      "RelativePath": "AttendanceSystem#[.{fingerprint=kga7orn96f}]?.styles.css.gz",
+      "RelativePath": "AttendanceSystem#[.{fingerprint=yzxvpipnch}]?.styles.css.gz",
       "AssetKind": "All",
       "AssetMode": "CurrentProject",
       "AssetRole": "Alternative",
@@ -2593,8 +2593,8 @@
       "RelatedAsset": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/scopedcss/bundle/AttendanceSystem.styles.css",
       "AssetTraitName": "Content-Encoding",
       "AssetTraitValue": "gzip",
-      "Fingerprint": "6di97hedbf",
-      "Integrity": "OjCSSSxR3XsQw6bbOqi91eLV7Wzu+y6NIa9AB1mWpMM=",
+      "Fingerprint": "m6zjnkp4re",
+      "Integrity": "IvBa4TrU9GXI0nBJyUQHo/u1td/Y3lD5jZgD1M0Sbto=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/scopedcss/bundle/AttendanceSystem.styles.css"
@@ -2719,8 +2719,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "ScopedCss",
       "AssetTraitValue": "ApplicationBundle",
-      "Fingerprint": "kga7orn96f",
-      "Integrity": "TLvXC9CTzs2dvoh71FSX3fE+JoVQeHJjq4MMGidAHRY=",
+      "Fingerprint": "yzxvpipnch",
+      "Integrity": "3k6HyQmfjh1Sdo4U0aNlzA0YiKLajF2TW6jyH5J2h0o=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/scopedcss/bundle/AttendanceSystem.styles.css"
@@ -2740,8 +2740,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "ScopedCss",
       "AssetTraitValue": "ProjectBundle",
-      "Fingerprint": "kga7orn96f",
-      "Integrity": "TLvXC9CTzs2dvoh71FSX3fE+JoVQeHJjq4MMGidAHRY=",
+      "Fingerprint": "yzxvpipnch",
+      "Integrity": "3k6HyQmfjh1Sdo4U0aNlzA0YiKLajF2TW6jyH5J2h0o=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/scopedcss/projectbundle/AttendanceSystem.bundle.scp.css"
@@ -3023,12 +3023,12 @@
   "Endpoints": [
     {
       "Route": "AttendanceSystem.bundle.scp.css",
-      "AssetFile": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/veb82wehl1-kga7orn96f.gz",
+      "AssetFile": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/veb82wehl1-yzxvpipnch.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
           "Value": "gzip",
-          "Quality": "0.001074113856"
+          "Quality": "0.001068376068"
         }
       ],
       "ResponseHeaders": [
@@ -3038,15 +3038,15 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "930"
+          "Value": "935"
         },
         {
           "Name": "ETag",
-          "Value": "\"OjCSSSxR3XsQw6bbOqi91eLV7Wzu+y6NIa9AB1mWpMM=\""
+          "Value": "\"IvBa4TrU9GXI0nBJyUQHo/u1td/Y3lD5jZgD1M0Sbto=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 18 Apr 2025 19:07:38 GMT"
+          "Value": "Thu, 24 Apr 2025 23:58:46 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -3066,13 +3066,13 @@
         },
         {
           "Name": "ETag",
-          "Value": "W/\"TLvXC9CTzs2dvoh71FSX3fE+JoVQeHJjq4MMGidAHRY=\""
+          "Value": "W/\"3k6HyQmfjh1Sdo4U0aNlzA0YiKLajF2TW6jyH5J2h0o=\""
         }
       ],
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-TLvXC9CTzs2dvoh71FSX3fE+JoVQeHJjq4MMGidAHRY="
+          "Value": "sha256-3k6HyQmfjh1Sdo4U0aNlzA0YiKLajF2TW6jyH5J2h0o="
         }
       ]
     },
@@ -3087,7 +3087,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "2883"
+          "Value": "2885"
         },
         {
           "Name": "Content-Type",
@@ -3095,11 +3095,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"TLvXC9CTzs2dvoh71FSX3fE+JoVQeHJjq4MMGidAHRY=\""
+          "Value": "\"3k6HyQmfjh1Sdo4U0aNlzA0YiKLajF2TW6jyH5J2h0o=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 18 Apr 2025 19:07:38 GMT"
+          "Value": "Thu, 24 Apr 2025 23:58:46 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -3109,13 +3109,13 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-TLvXC9CTzs2dvoh71FSX3fE+JoVQeHJjq4MMGidAHRY="
+          "Value": "sha256-3k6HyQmfjh1Sdo4U0aNlzA0YiKLajF2TW6jyH5J2h0o="
         }
       ]
     },
     {
       "Route": "AttendanceSystem.bundle.scp.css.gz",
-      "AssetFile": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/veb82wehl1-kga7orn96f.gz",
+      "AssetFile": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/veb82wehl1-yzxvpipnch.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -3124,7 +3124,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "930"
+          "Value": "935"
         },
         {
           "Name": "Content-Type",
@@ -3132,11 +3132,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"OjCSSSxR3XsQw6bbOqi91eLV7Wzu+y6NIa9AB1mWpMM=\""
+          "Value": "\"IvBa4TrU9GXI0nBJyUQHo/u1td/Y3lD5jZgD1M0Sbto=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 18 Apr 2025 19:07:38 GMT"
+          "Value": "Thu, 24 Apr 2025 23:58:46 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -3154,18 +3154,18 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-OjCSSSxR3XsQw6bbOqi91eLV7Wzu+y6NIa9AB1mWpMM="
+          "Value": "sha256-IvBa4TrU9GXI0nBJyUQHo/u1td/Y3lD5jZgD1M0Sbto="
         }
       ]
     },
     {
-      "Route": "AttendanceSystem.kga7orn96f.bundle.scp.css",
-      "AssetFile": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/veb82wehl1-kga7orn96f.gz",
+      "Route": "AttendanceSystem.styles.css",
+      "AssetFile": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/ykxdqzgyl7-yzxvpipnch.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
           "Value": "gzip",
-          "Quality": "0.001074113856"
+          "Quality": "0.001068376068"
         }
       ],
       "ResponseHeaders": [
@@ -3175,15 +3175,152 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "930"
+          "Value": "935"
         },
         {
           "Name": "ETag",
-          "Value": "\"OjCSSSxR3XsQw6bbOqi91eLV7Wzu+y6NIa9AB1mWpMM=\""
+          "Value": "\"IvBa4TrU9GXI0nBJyUQHo/u1td/Y3lD5jZgD1M0Sbto=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 18 Apr 2025 19:07:38 GMT"
+          "Value": "Thu, 24 Apr 2025 23:58:46 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"3k6HyQmfjh1Sdo4U0aNlzA0YiKLajF2TW6jyH5J2h0o=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-3k6HyQmfjh1Sdo4U0aNlzA0YiKLajF2TW6jyH5J2h0o="
+        }
+      ]
+    },
+    {
+      "Route": "AttendanceSystem.styles.css",
+      "AssetFile": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/scopedcss/bundle/AttendanceSystem.styles.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2885"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"3k6HyQmfjh1Sdo4U0aNlzA0YiKLajF2TW6jyH5J2h0o=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 24 Apr 2025 23:58:46 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-3k6HyQmfjh1Sdo4U0aNlzA0YiKLajF2TW6jyH5J2h0o="
+        }
+      ]
+    },
+    {
+      "Route": "AttendanceSystem.styles.css.gz",
+      "AssetFile": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/ykxdqzgyl7-yzxvpipnch.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "935"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"IvBa4TrU9GXI0nBJyUQHo/u1td/Y3lD5jZgD1M0Sbto=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 24 Apr 2025 23:58:46 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-IvBa4TrU9GXI0nBJyUQHo/u1td/Y3lD5jZgD1M0Sbto="
+        }
+      ]
+    },
+    {
+      "Route": "AttendanceSystem.yzxvpipnch.bundle.scp.css",
+      "AssetFile": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/veb82wehl1-yzxvpipnch.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.001068376068"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "935"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"IvBa4TrU9GXI0nBJyUQHo/u1td/Y3lD5jZgD1M0Sbto=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 24 Apr 2025 23:58:46 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -3203,13 +3340,13 @@
         },
         {
           "Name": "ETag",
-          "Value": "W/\"TLvXC9CTzs2dvoh71FSX3fE+JoVQeHJjq4MMGidAHRY=\""
+          "Value": "W/\"3k6HyQmfjh1Sdo4U0aNlzA0YiKLajF2TW6jyH5J2h0o=\""
         }
       ],
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "kga7orn96f"
+          "Value": "yzxvpipnch"
         },
         {
           "Name": "label",
@@ -3217,12 +3354,12 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-TLvXC9CTzs2dvoh71FSX3fE+JoVQeHJjq4MMGidAHRY="
+          "Value": "sha256-3k6HyQmfjh1Sdo4U0aNlzA0YiKLajF2TW6jyH5J2h0o="
         }
       ]
     },
     {
-      "Route": "AttendanceSystem.kga7orn96f.bundle.scp.css",
+      "Route": "AttendanceSystem.yzxvpipnch.bundle.scp.css",
       "AssetFile": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/scopedcss/projectbundle/AttendanceSystem.bundle.scp.css",
       "Selectors": [],
       "ResponseHeaders": [
@@ -3232,7 +3369,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "2883"
+          "Value": "2885"
         },
         {
           "Name": "Content-Type",
@@ -3240,11 +3377,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"TLvXC9CTzs2dvoh71FSX3fE+JoVQeHJjq4MMGidAHRY=\""
+          "Value": "\"3k6HyQmfjh1Sdo4U0aNlzA0YiKLajF2TW6jyH5J2h0o=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 18 Apr 2025 19:07:38 GMT"
+          "Value": "Thu, 24 Apr 2025 23:58:46 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -3254,7 +3391,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "kga7orn96f"
+          "Value": "yzxvpipnch"
         },
         {
           "Name": "label",
@@ -3262,13 +3399,13 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-TLvXC9CTzs2dvoh71FSX3fE+JoVQeHJjq4MMGidAHRY="
+          "Value": "sha256-3k6HyQmfjh1Sdo4U0aNlzA0YiKLajF2TW6jyH5J2h0o="
         }
       ]
     },
     {
-      "Route": "AttendanceSystem.kga7orn96f.bundle.scp.css.gz",
-      "AssetFile": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/veb82wehl1-kga7orn96f.gz",
+      "Route": "AttendanceSystem.yzxvpipnch.bundle.scp.css.gz",
+      "AssetFile": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/veb82wehl1-yzxvpipnch.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -3277,7 +3414,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "930"
+          "Value": "935"
         },
         {
           "Name": "Content-Type",
@@ -3285,11 +3422,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"OjCSSSxR3XsQw6bbOqi91eLV7Wzu+y6NIa9AB1mWpMM=\""
+          "Value": "\"IvBa4TrU9GXI0nBJyUQHo/u1td/Y3lD5jZgD1M0Sbto=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 18 Apr 2025 19:07:38 GMT"
+          "Value": "Thu, 24 Apr 2025 23:58:46 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -3307,7 +3444,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "kga7orn96f"
+          "Value": "yzxvpipnch"
         },
         {
           "Name": "label",
@@ -3315,18 +3452,18 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-OjCSSSxR3XsQw6bbOqi91eLV7Wzu+y6NIa9AB1mWpMM="
+          "Value": "sha256-IvBa4TrU9GXI0nBJyUQHo/u1td/Y3lD5jZgD1M0Sbto="
         }
       ]
     },
     {
-      "Route": "AttendanceSystem.kga7orn96f.styles.css",
-      "AssetFile": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/ykxdqzgyl7-kga7orn96f.gz",
+      "Route": "AttendanceSystem.yzxvpipnch.styles.css",
+      "AssetFile": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/ykxdqzgyl7-yzxvpipnch.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
           "Value": "gzip",
-          "Quality": "0.001074113856"
+          "Quality": "0.001068376068"
         }
       ],
       "ResponseHeaders": [
@@ -3336,15 +3473,15 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "930"
+          "Value": "935"
         },
         {
           "Name": "ETag",
-          "Value": "\"OjCSSSxR3XsQw6bbOqi91eLV7Wzu+y6NIa9AB1mWpMM=\""
+          "Value": "\"IvBa4TrU9GXI0nBJyUQHo/u1td/Y3lD5jZgD1M0Sbto=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 18 Apr 2025 19:07:38 GMT"
+          "Value": "Thu, 24 Apr 2025 23:58:46 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -3364,13 +3501,13 @@
         },
         {
           "Name": "ETag",
-          "Value": "W/\"TLvXC9CTzs2dvoh71FSX3fE+JoVQeHJjq4MMGidAHRY=\""
+          "Value": "W/\"3k6HyQmfjh1Sdo4U0aNlzA0YiKLajF2TW6jyH5J2h0o=\""
         }
       ],
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "kga7orn96f"
+          "Value": "yzxvpipnch"
         },
         {
           "Name": "label",
@@ -3378,12 +3515,12 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-TLvXC9CTzs2dvoh71FSX3fE+JoVQeHJjq4MMGidAHRY="
+          "Value": "sha256-3k6HyQmfjh1Sdo4U0aNlzA0YiKLajF2TW6jyH5J2h0o="
         }
       ]
     },
     {
-      "Route": "AttendanceSystem.kga7orn96f.styles.css",
+      "Route": "AttendanceSystem.yzxvpipnch.styles.css",
       "AssetFile": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/scopedcss/bundle/AttendanceSystem.styles.css",
       "Selectors": [],
       "ResponseHeaders": [
@@ -3393,7 +3530,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "2883"
+          "Value": "2885"
         },
         {
           "Name": "Content-Type",
@@ -3401,11 +3538,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"TLvXC9CTzs2dvoh71FSX3fE+JoVQeHJjq4MMGidAHRY=\""
+          "Value": "\"3k6HyQmfjh1Sdo4U0aNlzA0YiKLajF2TW6jyH5J2h0o=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 18 Apr 2025 19:07:38 GMT"
+          "Value": "Thu, 24 Apr 2025 23:58:46 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -3415,7 +3552,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "kga7orn96f"
+          "Value": "yzxvpipnch"
         },
         {
           "Name": "label",
@@ -3423,13 +3560,13 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-TLvXC9CTzs2dvoh71FSX3fE+JoVQeHJjq4MMGidAHRY="
+          "Value": "sha256-3k6HyQmfjh1Sdo4U0aNlzA0YiKLajF2TW6jyH5J2h0o="
         }
       ]
     },
     {
-      "Route": "AttendanceSystem.kga7orn96f.styles.css.gz",
-      "AssetFile": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/ykxdqzgyl7-kga7orn96f.gz",
+      "Route": "AttendanceSystem.yzxvpipnch.styles.css.gz",
+      "AssetFile": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/ykxdqzgyl7-yzxvpipnch.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -3438,7 +3575,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "930"
+          "Value": "935"
         },
         {
           "Name": "Content-Type",
@@ -3446,11 +3583,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"OjCSSSxR3XsQw6bbOqi91eLV7Wzu+y6NIa9AB1mWpMM=\""
+          "Value": "\"IvBa4TrU9GXI0nBJyUQHo/u1td/Y3lD5jZgD1M0Sbto=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 18 Apr 2025 19:07:38 GMT"
+          "Value": "Thu, 24 Apr 2025 23:58:46 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -3468,7 +3605,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "kga7orn96f"
+          "Value": "yzxvpipnch"
         },
         {
           "Name": "label",
@@ -3476,144 +3613,7 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-OjCSSSxR3XsQw6bbOqi91eLV7Wzu+y6NIa9AB1mWpMM="
-        }
-      ]
-    },
-    {
-      "Route": "AttendanceSystem.styles.css",
-      "AssetFile": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/ykxdqzgyl7-kga7orn96f.gz",
-      "Selectors": [
-        {
-          "Name": "Content-Encoding",
-          "Value": "gzip",
-          "Quality": "0.001074113856"
-        }
-      ],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "930"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"OjCSSSxR3XsQw6bbOqi91eLV7Wzu+y6NIa9AB1mWpMM=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Fri, 18 Apr 2025 19:07:38 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "no-cache"
-        },
-        {
-          "Name": "Content-Encoding",
-          "Value": "gzip"
-        },
-        {
-          "Name": "Vary",
-          "Value": "Content-Encoding"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "W/\"TLvXC9CTzs2dvoh71FSX3fE+JoVQeHJjq4MMGidAHRY=\""
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "integrity",
-          "Value": "sha256-TLvXC9CTzs2dvoh71FSX3fE+JoVQeHJjq4MMGidAHRY="
-        }
-      ]
-    },
-    {
-      "Route": "AttendanceSystem.styles.css",
-      "AssetFile": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/scopedcss/bundle/AttendanceSystem.styles.css",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "2883"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"TLvXC9CTzs2dvoh71FSX3fE+JoVQeHJjq4MMGidAHRY=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Fri, 18 Apr 2025 19:07:38 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "no-cache"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "integrity",
-          "Value": "sha256-TLvXC9CTzs2dvoh71FSX3fE+JoVQeHJjq4MMGidAHRY="
-        }
-      ]
-    },
-    {
-      "Route": "AttendanceSystem.styles.css.gz",
-      "AssetFile": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/ykxdqzgyl7-kga7orn96f.gz",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "930"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"OjCSSSxR3XsQw6bbOqi91eLV7Wzu+y6NIa9AB1mWpMM=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Fri, 18 Apr 2025 19:07:38 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "no-cache"
-        },
-        {
-          "Name": "Content-Encoding",
-          "Value": "gzip"
-        },
-        {
-          "Name": "Vary",
-          "Value": "Content-Encoding"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "integrity",
-          "Value": "sha256-OjCSSSxR3XsQw6bbOqi91eLV7Wzu+y6NIa9AB1mWpMM="
+          "Value": "sha256-IvBa4TrU9GXI0nBJyUQHo/u1td/Y3lD5jZgD1M0Sbto="
         }
       ]
     },

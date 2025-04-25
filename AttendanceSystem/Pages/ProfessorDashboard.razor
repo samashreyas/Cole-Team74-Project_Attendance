@@ -1,82 +1,72 @@
 @page "/professor"
+@using Microsoft.EntityFrameworkCore
+@using AttendanceSystem.Data.Models
+@inject AttendanceDbContext DbContext
 
 <PageTitle>My Classes (Professor)</PageTitle>
 
-<div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">My Classes (Professor)</h1>
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        @foreach (var classItem in ProfessorClasses)
-        {
-            <a href="/professor/class/@classItem.Id" class="no-underline">
-                <div class="bg-white shadow rounded-lg p-4 hover:bg-gray-50 cursor-pointer">
-                    <h2 class="text-xl font-semibold mb-2">@classItem.Name</h2>
-                    <div class="text-gray-600">
-                        <p>Time: @classItem.Time</p>
-                        <p>Room: @classItem.Room</p>
-                        <div class="mt-2 flex justify-between items-center">
-                            <span class="text-sm">Students Enrolled: @classItem.TotalStudents</span>
-                            <span class="text-sm text-blue-600">Present Today: @CountPresentToday(classItem)</span>
+<div class="max-w-6xl mx-auto p-6">
+    <h1 class="text-3xl font-semibold text-gray-800 mb-6 text-center">My Classes</h1>
+
+    @if (ProfessorClasses.Count == 0)
+    {
+        <p class="text-center text-gray-500">You're not teaching any classes yet.</p>
+    }
+    else
+    {
+        <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            @foreach (var classItem in ProfessorClasses)
+            {
+                <a href="/professor/class/@classItem.Id" 
+                   class="block no-underline text-inherit focus:outline-none focus:ring-2 focus:ring-blue-300">
+                    <div class="text-gray-800 border border-gray-300 rounded-xl bg-white p-5 hover:shadow-md transition-shadow duration-200">
+                        <h2 class="text-lg font-semibold mb-2">@classItem.Name</h2>
+                        <div class="text-sm space-y-1">
+                            <p><strong>Time:</strong> @classItem.Time</p>
+                            <p><strong>Room:</strong> @classItem.Room</p>
+                        </div>
+                        <div class="mt-4 flex justify-between items-center text-sm">
+                            <span>Students Enrolled: <strong>@classItem.TotalStudents</strong></span>
+                            <span class="font-medium text-blue-600">Present Today: @classItem.PresentToday</span>
                         </div>
                     </div>
-                </div>
-            </a>
-        }
-    </div>
+                </a>
+            }
+        </div>
+    }
 </div>
 
 @code {
-    private List<ProfessorClassItem> ProfessorClasses = new List<ProfessorClassItem>
-    {
-        new ProfessorClassItem(10, "Computer Science 101", "Tue/Thu 9:00 AM", "Room 210", 3, new List<AttendanceRecord>
-        {
-            new AttendanceRecord { Date = DateTime.Today, Status = "Present" },
-            new AttendanceRecord { Date = DateTime.Today, Status = "Absent" },
-            new AttendanceRecord { Date = DateTime.Today, Status = "Present" }
-        }),
-        new ProfessorClassItem(11, "Data Structures", "Mon/Wed 1:00 PM", "Room 110", 3, new List<AttendanceRecord>
-        {
-            new AttendanceRecord { Date = DateTime.Today, Status = "Present" },
-            new AttendanceRecord { Date = DateTime.Today, Status = "Present" },
-            new AttendanceRecord { Date = DateTime.Today, Status = "Present" }
-        }),
-        new ProfessorClassItem(12, "Software Engineering", "Fri 11:00 AM", "Room 305", 3, new List<AttendanceRecord>
-        {
-            new AttendanceRecord { Date = DateTime.Today, Status = "Absent" },
-            new AttendanceRecord { Date = DateTime.Today, Status = "Absent" },
-            new AttendanceRecord { Date = DateTime.Today, Status = "Present" }
-        })
-    };
+    private List<ProfessorClassItem> ProfessorClasses = new();
 
-    private int CountPresentToday(ProfessorClassItem classItem)
+    protected override async Task OnInitializedAsync()
     {
-        return classItem.AttendanceRecords
-            .Where(r => r.Date.Date == DateTime.Today && r.Status == "Present")
-            .Count();
+        var professorId = 1; // TODO: Replace with actual logged-in professor ID
+
+        // Query all classes taught by this professor, including attendance and enrollment
+        var classes = await DbContext.Classes
+            .Where(c => c.InstructorID == professorId)
+            .Include(c => c.AttendanceRecords)
+            .ToListAsync();
+
+        ProfessorClasses = classes.Select(c => new ProfessorClassItem
+        {
+            Id = c.ClassID,
+            Name = c.Name,
+            Time = c.Time,
+            Room = c.Room,
+            TotalStudents = c.TotalStudents,
+            PresentToday = c.AttendanceRecords.Count(a => a.Date.Date == DateTime.Today && a.Status == "Present")
+        }).ToList();
     }
 
     public class ProfessorClassItem
     {
         public int Id { get; set; }
-        public string? Name { get; set; }
-        public string? Time { get; set; }
-        public string? Room { get; set; }
+        public string Name { get; set; } = "";
+        public string Time { get; set; } = "";
+        public string Room { get; set; } = "";
         public int TotalStudents { get; set; }
-        public List<AttendanceRecord> AttendanceRecords { get; set; }
-
-        public ProfessorClassItem(int id, string name, string time, string room, int totalStudents, List<AttendanceRecord> attendanceRecords)
-        {
-            Id = id;
-            Name = name;
-            Time = time;
-            Room = room;
-            TotalStudents = totalStudents;
-            AttendanceRecords = attendanceRecords ?? new List<AttendanceRecord>();
-        }
-    }
-
-    public class AttendanceRecord
-    {
-        public DateTime Date { get; set; }
-        public required string Status { get; set; }
+        public int PresentToday { get; set; }
     }
 }

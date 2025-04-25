@@ -1,82 +1,180 @@
 @page "/professor/class/{Id:int}"
-@using System.Globalization
-@inject IJSRuntime JSRuntime
-@rendermode InteractiveServer
+@using Microsoft.EntityFrameworkCore
+@using AttendanceSystem.Data.Models
+@inject AttendanceDbContext DbContext
+
+<style>
+    .blue-button {
+        background-color: #3b82f6;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        transition: background-color 0.2s;
+    }
+
+    .blue-button:hover {
+        background-color: #2563eb;
+    }
+
+    table {
+        border-collapse: collapse;
+        margin-left: 1.25rem;
+    }
+
+    th, td {
+        border: 1px solid #e5e7eb;
+        padding: 0.75rem;
+        text-align: left;
+    }
+
+    h2.text-xl {
+        margin-left: 1.25rem;
+        margin-top: 1rem;
+    }
+
+    thead th {
+        background-color: #f3f4f6;
+        border-bottom: 1px solid #8aa6d1;
+    }
+
+    tbody tr {
+        background-color: #f9f9f9;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .content-indented {
+        margin-left: 1.25rem;
+    }
+
+    select {
+        padding: 0.25rem;
+        border-radius: 0.25rem;
+        border: 1px solid #d1d5db;
+    }
+</style>
 
 <div class="container mx-auto p-4">
     <h1 class="text-2xl font-bold mb-4">@CurrentClass?.Name - Manage Attendance</h1>
 
     @if (CurrentClass != null)
     {
-        <div class="bg-white shadow rounded-lg p-6 mb-6">
-            <div class="bg-white shadow rounded-lg p-6 mb-6">
-    <h2 class="text-xl font-semibold mb-4">Attendance Summary</h2>
-    <p>Total Students: @CurrentClass.Students.Count</p>
-    <p>Present Today: @CurrentClass.Students.Count(s => s.AttendanceRecords.Any(r => r.Date.Date == DateTime.Today && r.Status == "Present"))</p>
-    <p>Absent Today: @CurrentClass.Students.Count(s => s.AttendanceRecords.Any(r => r.Date.Date == DateTime.Today && r.Status == "Absent"))</p>
-</div>
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-semibold">Record Attendance</h2>
-                <button style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;"
-
-                        @onclick="AddTodayAttendanceForAll">
-                    Mark All Present
-                </button>
-                <button style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;"
-
-                        @onclick="RemoveTodayAttendanceForAll">
-                    Mark All Absent
-                </button>
+        <div class="bg-white border rounded-lg p-6 mb-6 space-y-4">
+            <!-- Question Selection Section -->
+            <div class="mb-4">
+                <h2 class="text-xl font-semibold mb-3">Question Selection</h2>
+                <div class="content-indented">
+                    <div class="flex items-center gap-4">
+                        <select @bind="selectedQuestionText" class="w-64">
+                            <option value="">-- Select a question --</option>
+                            @foreach (var question in ClassQuestions)
+                            {
+                                <option value="@question.QuestionText">@question.QuestionText</option>
+                            }
+                        </select>
+                        <button @onclick="SelectQuestion" class="blue-button">
+                            Select Question
+                        </button>
+                    </div>
+                    
+                    @if (!string.IsNullOrEmpty(selectedQuestionMessage))
+                    {
+                        <div class="mt-2 @(isSuccess ? "text-green-600" : "text-red-600")">
+                            @selectedQuestionMessage
+                        </div>
+                    }
+                    
+                    @if (SelectedQuestion != null)
+                    {
+                        <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded">
+                            <p class="font-semibold">Currently Selected Question:</p>
+                            <p class="mt-2">@SelectedQuestion.QuestionText</p>
+                        </div>
+                    }
+                </div>
             </div>
 
-            <table class="w-full border-collapse">
-                <thead>
-                    <tr class="bg-gray-100">
-                        <th class="border p-2 text-left">Date</th>
-                        @foreach (var student in CurrentClass.Students)
-                        {
-                            <th class="border p-2 text-left">@student.Name</th>
-                        }
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var date in DistinctAttendanceDates.OrderByDescending(d => d))
-                    {
+            <div class="mb-3">
+                <h2 class="text-xl font-semibold mb-3">Attendance Summary</h2>
+                <div class="content-indented">
+                    <p class="mb-1"><strong>Total Students:</strong> @CurrentClass.Students.Count</p>
+                    <p class="mb-1"><strong>Present Today:</strong> @CurrentClass.Students.Count(s => s.AttendanceRecords.Any(r => r.Date.Date == DateTime.Today && r.Status == "Present"))</p>
+                    <p><strong>Absent Today:</strong> @CurrentClass.Students.Count(s => s.AttendanceRecords.Any(r => r.Date.Date == DateTime.Today && r.Status == "Absent"))</p>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <h2 class="text-xl font-semibold mb-3">Record Attendance</h2>
+                <div class="content-indented">
+                    <button @onclick="AddTodayAttendanceForAll" class="blue-button mr-2">
+                        Mark All Present
+                    </button>
+                    <button @onclick="RemoveTodayAttendanceForAll" class="blue-button">
+                        Mark All Absent
+                    </button>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="text-xl font-semibold mb-3">Attendance Details</h2>
+                <table class="w-full">
+                    <thead>
                         <tr>
-                            <td class="border p-2">@date.ToString("MM/dd/yyyy")</td>
+                            <th>Date</th>
                             @foreach (var student in CurrentClass.Students)
                             {
-                                var record = student.AttendanceRecords.FirstOrDefault(r => r.Date.Date == date.Date);
-                                <td class="border p-2">
-                                    <span class="@(record?.Status == "Present" ? "text-green-600" : "text-red-600")">
-                                        @(record?.Status ?? "N/A")
-                                    </span>
-                                </td>
+                                <th>@student.Name</th>
                             }
                         </tr>
-                    }
-                </tbody>
-            </table>
-        
-            <h2 class="text-xl font-semibold mb-4">Enrolled Students</h2>
-            <table class="w-full border-collapse mb-6">
-                <thead>
-                    <tr class="bg-gray-100">
-                        <th class="border p-2 text-left">Name</th>
-                        <th class="border p-2 text-left">Email</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var student in CurrentClass.Students)
-                    {
-                        <tr>
-                            <td class="border p-2">@student.Name</td>
-                            <td class="border p-2">@student.Email</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var date in DistinctAttendanceDates.OrderByDescending(d => d))
+                        {
+                            <tr>
+                                <td>@date.ToString("MM/dd/yyyy")</td>
+                                @foreach (var student in CurrentClass.Students)
+                                {
+                                    var record = student.AttendanceRecords.FirstOrDefault(r => r.Date.Date == date.Date);
+                                    <td class="text-center">
+                                        <select @onchange="(e) => UpdateAttendanceStatus(student, date, e.Value?.ToString())">
+                                            <option value="Present" selected="@(record?.Status == "Present")">Present</option>
+                                            <option value="Absent" selected="@(record?.Status == "Absent")">Absent</option>
+                                        </select>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="content-indented mt-4 mb-4">
+                    <button @onclick="SaveAttendanceChanges" class="blue-button">
+                        Save Attendance Changes
+                    </button>
+                </div>
+            </div>
+        </div>
 
+        <div class="bg-white border rounded-lg p-6">
+            <h2 class="text-xl font-semibold mb-3">Enrolled Students</h2>
+            <div class="mb-4">
+                <table class="w-full">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var student in CurrentClass.Students)
+                        {
+                            <tr>
+                                <td>@student.Name</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     }
     else
@@ -91,235 +189,206 @@
 
     private ClassItem? CurrentClass { get; set; }
     private HashSet<DateTime> DistinctAttendanceDates { get; set; } = new();
+    private List<QuestionItem> ClassQuestions { get; set; } = new();
+    private QuestionItem? SelectedQuestion { get; set; }
+    private string selectedQuestionText { get; set; } = "";
+    private string selectedQuestionMessage = "";
+    private bool isSuccess = false;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        // Sample data for professors
-        var classes = new List<ClassItem>
-{
-    new ClassItem
-    {
-        Id = 10,
-        Name = "Computer Science 101",
-        Instructor = "Dr. Johnson",
-        Time = "Tue/Thu 9:00 AM",
-        Room = "Room 210",
-        Credits = 3,
-        Students = new List<Student>
-        {
-            new Student
-            {
-                Name = "Alex Wilson",
-                Email = "alex@example.com",
-                AttendanceRecords = new List<AttendanceRecord>
-                {
-                    new AttendanceRecord { Date = DateTime.Now.AddDays(-7), Status = "Present" },
-                    new AttendanceRecord { Date = DateTime.Today, Status = "Present" }
-                }
-            },
-            new Student
-            {
-                Name = "Jamie Parker",
-                Email = "jamie@example.com",
-                AttendanceRecords = new List<AttendanceRecord>
-                {
-                    new AttendanceRecord { Date = DateTime.Now.AddDays(-7), Status = "Absent" },
-                    new AttendanceRecord { Date = DateTime.Today, Status = "Absent" }
-                }
-            },
-            new Student
-            {
-                Name = "Casey Thompson",
-                Email = "casey@example.com",
-                AttendanceRecords = new List<AttendanceRecord>
-                {
-                    new AttendanceRecord { Date = DateTime.Now.AddDays(-7), Status = "Present" },
-                    new AttendanceRecord { Date = DateTime.Today, Status = "Present" }
-                }
-            }
-        }
-    },
-    new ClassItem
-    {
-        Id = 11,
-        Name = "Data Structures",
-        Instructor = "Dr. Chen",
-        Time = "Mon/Wed 1:00 PM",
-        Room = "Room 110",
-        Credits = 4,
-        Students = new List<Student>
-        {
-            new Student
-            {
-                Name = "Taylor Reed",
-                Email = "taylor@example.com",
-                AttendanceRecords = new List<AttendanceRecord>
-                {
-                    new AttendanceRecord { Date = DateTime.Now.AddDays(-7), Status = "Present" },
-                    new AttendanceRecord { Date = DateTime.Today, Status = "Present" }
-                }
-            },
-            new Student
-            {
-                Name = "Morgan Smith",
-                Email = "morgan@example.com",
-                AttendanceRecords = new List<AttendanceRecord>
-                {
-                    new AttendanceRecord { Date = DateTime.Now.AddDays(-7), Status = "Present" },
-                    new AttendanceRecord { Date = DateTime.Today, Status = "Present" }
-                }
-            },
-            new Student
-            {
-                Name = "Jordan Lee",
-                Email = "jordan@example.com",
-                AttendanceRecords = new List<AttendanceRecord>
-                {
-                    new AttendanceRecord { Date = DateTime.Now.AddDays(-7), Status = "Absent" },
-                    new AttendanceRecord { Date = DateTime.Today, Status = "Present" }
-                }
-            }
-        }
-    },
-    new ClassItem
-    {
-        Id = 12,
-        Name = "Software Engineering",
-        Instructor = "Dr. Rodriguez",
-        Time = "Fri 11:00 AM",
-        Room = "Room 305",
-        Credits = 3,
-        Students = new List<Student>
-        {
-            new Student
-            {
-                Name = "Riley Johnson",
-                Email = "riley@example.com",
-                AttendanceRecords = new List<AttendanceRecord>
-                {
-                    new AttendanceRecord { Date = DateTime.Now.AddDays(-7), Status = "Present" },
-                    new AttendanceRecord { Date = DateTime.Today, Status = "Absent" }
-                }
-            },
-            new Student
-            {
-                Name = "Quinn Garcia",
-                Email = "quinn@example.com",
-                AttendanceRecords = new List<AttendanceRecord>
-                {
-                    new AttendanceRecord { Date = DateTime.Now.AddDays(-7), Status = "Present" },
-                    new AttendanceRecord { Date = DateTime.Today, Status = "Absent" }
-                }
-            },
-            new Student
-            {
-                Name = "Avery Kim",
-                Email = "avery@example.com",
-                AttendanceRecords = new List<AttendanceRecord>
-                {
-                    new AttendanceRecord { Date = DateTime.Now.AddDays(-7), Status = "Absent" },
-                    new AttendanceRecord { Date = DateTime.Today, Status = "Present" }
-                }
-            }
-        }
-    }
-};
+        var dbClass = await DbContext.Classes
+            .Include(c => c.Instructor)
+            .FirstOrDefaultAsync(c => c.ClassID == Id);
 
-        CurrentClass = classes.FirstOrDefault(c => c.Id == Id);
-
-        if (CurrentClass != null)
+        if (dbClass != null)
         {
-            // Gather distinct attendance dates from all students
-            DistinctAttendanceDates = CurrentClass.Students
-                .SelectMany(s => s.AttendanceRecords)
-                .Select(r => r.Date.Date)
-                .ToHashSet();
+            var enrolledStudents = await DbContext.StudentCourses
+                .Where(sc => sc.ClassID == Id)
+                .Join(DbContext.Students,
+                    sc => sc.StudentID,
+                    s => s.StudentID,
+                    (sc, s) => s)
+                .ToListAsync();
+
+            var classAttendance = await DbContext.AttendanceRecords
+                .Where(ar => ar.ClassID == Id)
+                .ToListAsync();
+
+            var students = enrolledStudents.Select(s => new StudentItem
+            {
+                Name = s.Name,
+                StudentID = s.StudentID,
+                AttendanceRecords = classAttendance
+                    .Where(ar => ar.StudentID == s.StudentID)
+                    .Select(ar => new AttendanceRecord
+                    {
+                        Date = ar.Date,
+                        Status = ar.Status,
+                        ClassID = ar.ClassID,
+                        StudentID = ar.StudentID
+                    }).ToList()
+            }).ToList();
+
+            CurrentClass = new ClassItem
+            {
+                ClassID = dbClass.ClassID,
+                Name = dbClass.Name,
+                Students = students
+            };
+
+            DistinctAttendanceDates = classAttendance.Select(ar => ar.Date.Date).ToHashSet();
+            
+            // Load questions for this class
+            await LoadQuestions();
         }
     }
 
-   private void AddTodayAttendanceForAll()
-{
-    if (CurrentClass == null) return;
-
-    var today = DateTime.Now.Date;
-
-    foreach (var student in CurrentClass.Students)
+    private async Task LoadQuestions()
     {
-        // Check if the student already has an attendance record for today
-        var existingRecord = student.AttendanceRecords.FirstOrDefault(r => r.Date.Date == today);
+        // Get questions for this class from the database
+        var questions = await DbContext.Questions
+            .Where(q => q.ClassID == Id)
+            .Select(q => new QuestionItem
+            {
+                QuestionText = q.QuestionText,
+                ClassID = q.ClassID,
+                Selected = q.Selected
+            })
+            .ToListAsync();
+        
+        ClassQuestions = questions;
+        
+        // Find currently selected question
+        SelectedQuestion = questions.FirstOrDefault(q => q.Selected);
+    }
 
-        if (existingRecord != null)
+    private async Task SelectQuestion()
+    {
+        if (string.IsNullOrEmpty(selectedQuestionText))
         {
-            // Update the existing record to "Present"
-            existingRecord.Status = "Present";
+            selectedQuestionMessage = "Please select a question first.";
+            isSuccess = false;
+            return;
+        }
+
+        try
+        {
+            // First, reset all questions' selected status to 0
+            var questionsToUpdate = await DbContext.Questions
+                .Where(q => q.ClassID == Id)
+                .ToListAsync();
+                
+            foreach (var q in questionsToUpdate)
+            {
+                q.Selected = (q.QuestionText == selectedQuestionText);
+            }
+            
+            await DbContext.SaveChangesAsync();
+            
+            // Reload questions to show changes
+            await LoadQuestions();
+            
+            selectedQuestionMessage = "Question successfully selected.";
+            isSuccess = true;
+        }
+        catch (Exception ex)
+        {
+            selectedQuestionMessage = $"Error: {ex.Message}";
+            isSuccess = false;
+        }
+    }
+
+    private void UpdateAttendanceStatus(StudentItem student, DateTime date, string? newStatus)
+    {
+        if (string.IsNullOrEmpty(newStatus)) return;
+
+        var record = student.AttendanceRecords.FirstOrDefault(r => r.Date.Date == date.Date);
+        if (record != null)
+        {
+            record.Status = newStatus;
         }
         else
         {
-            // Add a new attendance record for today with "Present"
             student.AttendanceRecords.Add(new AttendanceRecord
             {
-                Date = today,
-                Status = "Present"
+                Date = date,
+                Status = newStatus,
+                ClassID = Id,
+                StudentID = student.StudentID
             });
+            DistinctAttendanceDates.Add(date.Date);
         }
     }
 
-    DistinctAttendanceDates.Add(today);
-    StateHasChanged();
-}
-
-
-private void RemoveTodayAttendanceForAll()
-{
-    if (CurrentClass == null) return;
-
-    var today = DateTime.Now.Date;
-
-    foreach (var student in CurrentClass.Students)
+    private void AddTodayAttendanceForAll()
     {
-        var alreadyMarked = student.AttendanceRecords.Any(r => r.Date.Date == today);
-        if (!alreadyMarked)
+        foreach (var student in CurrentClass!.Students)
         {
-            student.AttendanceRecords.Add(new AttendanceRecord
+            UpdateAttendanceStatus(student, DateTime.Today, "Present");
+        }
+    }
+
+    private void RemoveTodayAttendanceForAll()
+    {
+        foreach (var student in CurrentClass!.Students)
+        {
+            UpdateAttendanceStatus(student, DateTime.Today, "Absent");
+        }
+    }
+
+    private async Task SaveAttendanceChanges()
+    {
+        if (CurrentClass == null) return;
+
+        foreach (var student in CurrentClass.Students)
+        {
+            foreach (var record in student.AttendanceRecords)
             {
-                Date = today,
-                Status = "Absent"
-            });
+                var existingRecord = await DbContext.AttendanceRecords
+                    .FirstOrDefaultAsync(ar =>
+                        ar.ClassID == record.ClassID &&
+                        ar.StudentID == record.StudentID &&
+                        ar.Date.Date == record.Date.Date);
+
+                if (existingRecord != null)
+                {
+                    existingRecord.Status = record.Status;
+                }
+                else
+                {
+                    DbContext.AttendanceRecords.Add(new AttendanceRecord
+                    {
+                        ClassID = record.ClassID,
+                        StudentID = record.StudentID,
+                        Date = record.Date.Date,
+                        Status = record.Status
+                    });
+                }
+            }
         }
-        else
-        {
-            // Update the record to be "Absent" if the student was marked present
-            var record = student.AttendanceRecords.First(r => r.Date.Date == today);
-            record.Status = "Absent";
-        }
+
+        await DbContext.SaveChangesAsync();
     }
 
-    DistinctAttendanceDates.Add(today);
-    StateHasChanged();
-}
-
-
-    public class ClassItem
+    private class ClassItem
     {
-        public int Id { get; set; }
+        public int ClassID { get; set; }
         public string Name { get; set; } = "";
-        public string Instructor { get; set; } = "";
-        public string Time { get; set; } = "";
-        public string Room { get; set; } = "";
-        public int Credits { get; set; }
-        public List<Student> Students { get; set; } = new();
+        public List<StudentItem> Students { get; set; } = new();
     }
 
-    public class Student
+    private class StudentItem
     {
+        public int StudentID { get; set; }
         public string Name { get; set; } = "";
-        public string Email { get; set; } = "";
         public List<AttendanceRecord> AttendanceRecords { get; set; } = new();
     }
-
-    public class AttendanceRecord
+    
+    private class QuestionItem
     {
-        public DateTime Date { get; set; }
-        public string Status { get; set; } = "Absent";
+        public string QuestionText { get; set; } = "";
+        public int ClassID { get; set; }
+        public bool Selected { get; set; }
     }
 }

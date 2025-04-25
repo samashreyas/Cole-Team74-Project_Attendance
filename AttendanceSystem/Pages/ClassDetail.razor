@@ -1,23 +1,24 @@
 @page "/student/class/{Id:int}"
 @using System.Globalization
+@using Microsoft.EntityFrameworkCore
+@using AttendanceSystem.Data.Models
+@inject AttendanceDbContext DbContext
 @inject IJSRuntime JSRuntime
 @rendermode InteractiveServer
 
 <div class="container mx-auto p-4">
-    <p>Debug: @DebugMessage</p>
-
     @if (CurrentClass != null)
     {
         <h1 class="text-2xl font-bold mb-4">@CurrentClass.Name - Attendance Details</h1>
-        
-        <div class="bg-white shadow rounded-lg p-6 mb-4">
-            <div class="flex justify-between items-center mb-4">
+
+        <div class="mb-4 border rounded-md shadow-sm">
+            <div class="flex justify-between items-center p-4 border-b">
                 <h2 class="text-xl font-semibold">Attendance Record</h2>
                 @if (ShouldShowAddAttendanceButton())
                 {
                     <button type="button"
                         style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;"
-                        @onclick="AddAttendanceRecordWithLogging"
+                        @onclick="ShowQuestionPrompt"
                         onmouseover="this.style.backgroundColor='#0056b3'"
                         onmouseout="this.style.backgroundColor='#007bff'">
                         Add Attendance Record
@@ -31,48 +32,96 @@
                 }
             </div>
 
+            <!-- Question prompt dialog -->
+            @if (IsQuestionPromptVisible)
+            {
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
+                    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+                        <h3 class="text-xl font-semibold mb-4">Daily Question</h3>
+                        <p class="mb-4">@DailyQuestion</p>
+                        
+                        <textarea 
+                            class="w-full p-2 border rounded mb-4" 
+                            rows="4" 
+                            placeholder="Type your answer here..."
+                            @bind="StudentAnswer">
+                        </textarea>
+                        
+                        <div class="flex justify-end space-x-2">
+                            <button 
+                                class="px-4 py-2 bg-gray-300 rounded"
+                                @onclick="CancelQuestionPrompt">
+                                Cancel
+                            </button>
+                            <button 
+                                class="px-4 py-2 bg-blue-500 text-white rounded"
+                                @onclick="SubmitAnswerAndAddAttendance">
+                                Submit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+
             <table class="w-full border-collapse">
                 <thead>
                     <tr class="bg-gray-100">
-                        <th class="border p-2 text-left">Date</th>
-                        <th class="border p-2 text-left">Status</th>
+                        <th class="p-2 text-left">Date</th>
+                        <th class="p-2 text-left">Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var record in CurrentClass.AttendanceRecords.OrderByDescending(r => r.Date))
+                    @if (CurrentClass.AttendanceRecords.Any())
+                    {
+                        @foreach (var record in CurrentClass.AttendanceRecords.OrderByDescending(r => r.Date))
+                        {
+                            <tr>
+                                <td class="p-2">@record.Date.ToString("MM/dd/yyyy")</td>
+                                <td class="p-2">
+                                    <span class="@(record.Status == "Present" ? "text-green-600" : "text-red-600")">
+                                        @record.Status
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
                     {
                         <tr>
-                            <td class="border p-2">@record.Date.ToString("MM/dd/yyyy")</td>
-                            <td class="border p-2">
-                                <span class="@(record.Status == "Present" ? "text-green-600" : "text-red-600")">
-                                    @record.Status
-                                </span>
-                            </td>
+                            <td class="p-2 text-center" colspan="2">No attendance records found</td>
                         </tr>
                     }
                 </tbody>
             </table>
+            <div style="padding-top: 1rem;"></div> 
         </div>
 
-        <div class="bg-white shadow rounded-lg p-6">
-            <h2 class="text-xl font-semibold mb-3">Class Information</h2>
+        <div class="border rounded-md shadow-sm p-4">
+            <h2 class="text-xl font-semibold mb-3 border-b pb-2">Class Information</h2>
             <div class="grid md:grid-cols-2 gap-4">
                 <div>
                     <p><strong>Instructor:</strong> @CurrentClass.Instructor</p>
                     <p><strong>Time:</strong> @CurrentClass.Time</p>
                     <p><strong>Room:</strong> @CurrentClass.Room</p>
-                    <p><strong>Credits:</strong> @CurrentClass.Credits</p>
+                    <p><strong>Total Students:</strong> @CurrentClass.Students</p>
                 </div>
-                
+
                 <div>
-                    <h3 class="text-lg font-semibold mb-2">Attendance Summary</h3>
+                    <h3 class="text-lg font-semibold mb-2 border-b pb-2">Attendance Summary</h3>
                     <p><strong>Total Classes:</strong> @CurrentClass.AttendanceRecords.Count</p>
                     <p><strong>Days Present:</strong> @PresentDays</p>
                     <p><strong>Days Absent:</strong> @AbsentDays</p>
-                    <p><strong>Attendance Percentage:</strong> 
-                        <span class="@(AttendancePercentage >= 75 ? "text-green-600" : "text-red-600")">
-                            @AttendancePercentage%
-                        </span>
+                    <p><strong>Attendance Percentage: </strong>
+                        @if (CurrentClass.AttendanceRecords.Any())
+                        {
+                            <span class="@(AttendancePercentage >= 75 ? "text-green-600" : "text-red-600")">
+                               @AttendancePercentage%
+                            </span>
+                        }
+                        else
+                        {
+                            <span><strong>No data</strong></span>
+                        }
                     </p>
                 </div>
             </div>
@@ -83,9 +132,12 @@
         <p>Class not found.</p>
     }
     
-    @* <button @onclick="TestButtonClick" class="mt-4 p-2 bg-gray-200 hover:bg-gray-300 rounded">
-        Test Button (Click Me)
-    </button> *@
+    @if (!string.IsNullOrEmpty(DebugMessage))
+    {
+        <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4 mt-4">
+            @DebugMessage
+        </div>
+    }
 </div>
 
 @code {
@@ -96,93 +148,64 @@
     private int PresentDays { get; set; }
     private int AbsentDays { get; set; }
     private double AttendancePercentage { get; set; }
-    private string DebugMessage { get; set; } = "Initial state";
+    private string DebugMessage { get; set; } = "";
+    
+    // Question handling properties
+    private bool IsQuestionPromptVisible { get; set; } = false;
+    private string DailyQuestion { get; set; } = "";
+    private string StudentAnswer { get; set; } = "";
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        DebugMessage = "OnInitialized called";
-        
-        var classes = new List<ClassItem>
+        try 
         {
-            new ClassItem
+            // Get the student ID - replace with actual auth logic when implemented
+            var studentId = 2;
+            
+            // Get the class from the database
+            var dbClass = await DbContext.Classes
+                .Include(c => c.Instructor)
+                .FirstOrDefaultAsync(c => c.ClassID == Id);
+                
+            if (dbClass != null)
             {
-                Id = 1,
-                Name = "Mathematics 101",
-                Instructor = "Dr. Smith",
-                Time = "Mon/Wed 10:00 AM",
-                Room = "Science Building, Room 302",
-                Credits = 3,
-                AttendanceRecords = new List<AttendanceRecord>
+                // Get attendance records for this student and class
+                var attendanceRecords = await DbContext.AttendanceRecords
+                    .Where(ar => ar.ClassID == Id && ar.StudentID == studentId)
+                    .ToListAsync();
+                
+                // Create the ClassItem for display
+                CurrentClass = new ClassItem(
+                    dbClass.ClassID,
+                    dbClass.Name,
+                    dbClass.Instructor?.Name ?? "Unknown",
+                    dbClass.Time,
+                    dbClass.Room,
+                    dbClass.TotalStudents,
+                    attendanceRecords.Select(ar => new AttendanceRecord 
+                    { 
+                        Date = ar.Date, 
+                        Status = ar.Status 
+                    }).ToList()
+                );
+                
+                // Calculate statistics
+                PresentDays = CurrentClass.AttendanceRecords.Count(r => r.Status == "Present");
+                AbsentDays = CurrentClass.AttendanceRecords.Count(r => r.Status == "Absent");
+                
+                if (CurrentClass.AttendanceRecords.Any())
                 {
-                    new AttendanceRecord { Date = DateTime.Now.AddDays(-7), Status = "Present" },
-                    new AttendanceRecord { Date = DateTime.Now.AddDays(-14), Status = "Absent" },
-                    new AttendanceRecord { Date = DateTime.Now.AddDays(-21), Status = "Present" }
+                    AttendancePercentage = Math.Round((double)PresentDays / CurrentClass.AttendanceRecords.Count * 100, 2);
                 }
-            },
-            new ClassItem
-            {
-                Id = 2,
-                Name = "Computer Science 205",
-                Instructor = "Prof. Johnson",
-                Time = "Tue/Thu 1:00 PM",
-                Room = "Tech Center, Room 105",
-                Credits = 4,
-                AttendanceRecords = new List<AttendanceRecord>
+                else
                 {
-                    new AttendanceRecord { Date = DateTime.Now.AddDays(-5), Status = "Present" },
-                    new AttendanceRecord { Date = DateTime.Now.AddDays(-12), Status = "Present" },
-                    new AttendanceRecord { Date = DateTime.Now.AddDays(-19), Status = "Absent" }
-                }
-            },
-            new ClassItem
-            {
-                Id = 3,
-                Name = "Computer Science 301",
-                Instructor = "Prof. Sam",
-                Time = "Fri 1:00 PM",
-                Room = "Tech Center, Room 301",
-                Credits = 4,
-                AttendanceRecords = new List<AttendanceRecord>
-                {
-                    new AttendanceRecord { Date = DateTime.Now.AddDays(-5), Status = "Present" },
-                    new AttendanceRecord { Date = DateTime.Now.AddDays(-12), Status = "Present" },
-                    new AttendanceRecord { Date = DateTime.Now.AddDays(-19), Status = "Absent" }
+                    AttendancePercentage = 0;
                 }
             }
-        };
-
-        CurrentClass = classes.FirstOrDefault(c => c.Id == Id);
-
-        if (CurrentClass != null)
-        {
-            DebugMessage = $"Class found: {CurrentClass.Name}";
-            PresentDays = CurrentClass.AttendanceRecords.Count(r => r.Status == "Present");
-            AbsentDays = CurrentClass.AttendanceRecords.Count(r => r.Status == "Absent");
-            AttendancePercentage = Math.Round((double)PresentDays / CurrentClass.AttendanceRecords.Count * 100, 2);
         }
-        else
+        catch (Exception ex)
         {
-            DebugMessage = "Class not found";
-            PresentDays = 0;
-            AbsentDays = 0;
-            AttendancePercentage = 0;
-        }
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            try
-            {
-                await JSRuntime.InvokeVoidAsync("console.log", "OnAfterRenderAsync - First render");
-            }
-            catch (Exception ex)
-            {
-                DebugMessage += $" (JS Error: {ex.Message})";
-            }
-            DebugMessage = "Rendered successfully";
-            StateHasChanged();
+            DebugMessage = $"Error loading data: {ex.Message}";
         }
     }
 
@@ -201,7 +224,7 @@
         {
             return IsWithinOneHour(classTime, "Tue/Thu", today);
         }
-        else if (classTime.Contains("Fri") && (today.DayOfWeek == DayOfWeek.Friday ))
+        else if (classTime.Contains("Fri") && (today.DayOfWeek == DayOfWeek.Friday))
         {
             return true;
         }
@@ -220,64 +243,114 @@
         return false;
     }
 
-    private void TestButtonClick()
+    // Show question prompt and fetch selected question
+    private async Task ShowQuestionPrompt()
     {
-        DebugMessage = "Test Button Pressed";
-        StateHasChanged();
-    }
-
-    private void AddAttendanceRecordWithLogging()
-    {
-        StateHasChanged();
-        AddAttendanceRecord();
-    }
-
-    private async Task AddAttendanceRecord()
-    {
-        if (CurrentClass == null)
-        {
-            DebugMessage = "No class selected.";
-            StateHasChanged();
-            return;
-        }
-
-        DebugMessage = "Processing attendance record...";
-        StateHasChanged();
-
         try
         {
+            // Fetch the selected question for this class
+            var selectedQuestion = await DbContext.Questions
+                .Where(q => q.ClassID == Id && q.Selected)
+                .FirstOrDefaultAsync();
+
+            if (selectedQuestion != null)
+            {
+                DailyQuestion = selectedQuestion.QuestionText;
+                IsQuestionPromptVisible = true;
+            }
+            else
+            {
+                // Fallback if no selected question exists
+                DailyQuestion = "No question has been selected for today. Please submit attendance anyway.";
+                IsQuestionPromptVisible = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            DebugMessage = $"Error loading question: {ex.Message}";
+        }
+        
+        StateHasChanged();
+    }
+
+    // Cancel question prompt
+    private void CancelQuestionPrompt()
+    {
+        IsQuestionPromptVisible = false;
+        StudentAnswer = "";
+        StateHasChanged();
+    }
+
+    // Submit answer and add attendance record
+    private async Task SubmitAnswerAndAddAttendance()
+    {
+        try
+        {
+            var studentId = 2; // Replace with actual student ID from auth
             var today = DateTime.Now.Date;
+            
+            // 1. Create question response entity
+            if (!string.IsNullOrEmpty(DailyQuestion) && !string.IsNullOrEmpty(StudentAnswer))
+            {
+                // Create a new QuestionResponse entity (not a view model)
+                var questionResponse = new QuestionResponse
+                {
+                    QuestionText = DailyQuestion,
+                    StudentID = studentId,
+                    ClassID = Id,
+                    Answer = StudentAnswer
+                };
+                
+                // Add to DbContext
+                DbContext.QuestionResponses.Add(questionResponse);
+            }
+            
+            // 2. Create attendance record if it doesn't exist for today
             if (!CurrentClass.AttendanceRecords.Any(r => r.Date.Date == today))
             {
+                // Create a new AttendanceRecord entity (not a view model)
+                var newRecord = new AttendanceSystem.Data.Models.AttendanceRecord
+                {
+                    Date = today,
+                    Status = "Present",
+                    ClassID = Id,
+                    StudentID = studentId
+                };
+                
+                // Add to DbContext
+                DbContext.AttendanceRecords.Add(newRecord);
+                
+                // Save both changes in one transaction
+                await DbContext.SaveChangesAsync();
+                
+                // Update view model
                 CurrentClass.AttendanceRecords.Add(new AttendanceRecord
                 {
                     Date = today,
                     Status = "Present"
                 });
                 
+                // Update statistics
                 PresentDays = CurrentClass.AttendanceRecords.Count(r => r.Status == "Present");
                 AbsentDays = CurrentClass.AttendanceRecords.Count(r => r.Status == "Absent");
                 AttendancePercentage = Math.Round((double)PresentDays / CurrentClass.AttendanceRecords.Count * 100, 2);
                 
-                DebugMessage = $"Record added. Total records: {CurrentClass.AttendanceRecords.Count}";
-                
-                try
-                {
-                    await JSRuntime.InvokeVoidAsync("console.log", $"Added attendance record. New count: {CurrentClass.AttendanceRecords.Count}");
-                }
-                catch (Exception jsEx)
-                {
-                    DebugMessage += $" (JS Error: {jsEx.Message})";
-                }
+                DebugMessage = "Successfully recorded attendance and saved your answer.";
             }
             else
             {
-                DebugMessage = "Attendance record for today already exists.";
+                // Just save the question response if attendance already exists
+                await DbContext.SaveChangesAsync();
+                DebugMessage = "Saved your answer. Attendance record for today already exists.";
             }
+            
+            // Close the prompt
+            IsQuestionPromptVisible = false;
+            StudentAnswer = "";
         }
         catch (Exception ex)
         {
-            DebugMessage = $"Error adding record: {ex.Message}";
+            DebugMessage = $"Error saving data: {ex.Message}";
         }
         
         StateHasChanged();
@@ -285,13 +358,24 @@
 
     public class ClassItem
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string Instructor { get; set; } = string.Empty;
-        public string Time { get; set; } = string.Empty;
-        public string Room { get; set; } = "Unknown";
-        public int Credits { get; set; }
-        public List<AttendanceRecord> AttendanceRecords { get; set; } = new List<AttendanceRecord>();
+        public int? Id { get; set; }
+        public string? Name { get; set; }
+        public string? Instructor { get; set; }
+        public string? Time { get; set; }
+        public string? Room { get; set; }
+        public int? Students { get; set; }
+        public List<AttendanceRecord> AttendanceRecords { get; set; } 
+
+        public ClassItem(int id, string name, string instructor, string time, string room, int students, List<AttendanceRecord> attendanceRecords)
+        {
+            Id = id;
+            Name = name;
+            Instructor = instructor;
+            Time = time;
+            Room = room;
+            Students = students;
+            AttendanceRecords = attendanceRecords ?? new List<AttendanceRecord>();
+        }
     }
 
     public class AttendanceRecord

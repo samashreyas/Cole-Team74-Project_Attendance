@@ -5,73 +5,81 @@
 
 <PageTitle>My Classes (Student)</PageTitle>
 
-<div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">My Classes (Student)</h1>
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        @foreach (var classItem in StudentClasses)
-        {
-            <a href="student/class/@classItem.Id" class="no-underline">
-                <div class="bg-white shadow rounded-lg p-4 hover:bg-gray-50 cursor-pointer">
-                    <h2 class="text-xl font-semibold mb-2">@classItem.Name</h2>
-                    <div class="text-gray-600">
-                        <p>Instructor: @classItem.Instructor</p>
-                        <p>Time: @classItem.Time</p>
-                        <div class="mt-2 flex justify-between items-center">
-                            <span class="text-sm">Attendance: @CalculateAttendancePercentage(classItem)%</span>
-                            <span class="text-sm text-@(GetAttendanceColor(classItem))">
-                                @(CalculateAttendancePercentage(classItem) >= 75 ? "Good" : "Low")
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        }
+<div class="max-w-6xl mx-auto p-6">
+    <h1 class="text-3xl font-semibold text-gray-800 mb-6 text-center">My Classes</h1>
+
+    @if (StudentClasses.Count == 0)
+    {
+        <p class="text-center text-gray-500">You're not enrolled in any classes yet.</p>
+    }
+    else
+    {
+        <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            @foreach (var classItem in StudentClasses)
+{
+   <a href="student/class/@classItem.Id" 
+   class="block no-underline text-inherit focus:outline-none focus:ring-2 focus:ring-blue-300">
+    <div class="text-gray-800 border border-gray-300 rounded-xl bg-white p-5 hover:shadow-md transition-shadow duration-200">
+        <h2 class="text-lg font-semibold mb-2">@classItem.Name</h2>
+        <div class="text-sm space-y-1">
+            <p><strong>Instructor:</strong> @classItem.Instructor</p>
+            <p><strong>Time:</strong> @classItem.Time</p>
+            <p><strong>Room:</strong> @classItem.Room</p>
+        </div>
+        <div class="mt-4 flex justify-between items-center text-sm">
+            <span>Attendance: <strong>@CalculateAttendancePercentage(classItem)%</strong></span>
+            <span class="font-medium text-@(GetAttendanceColor(classItem))">
+                @(CalculateAttendancePercentage(classItem) >= 75 ? "Good" : "Low")
+            </span>
+        </div>
     </div>
+</a>
+
+
+}
+
+        </div>
+    }
 </div>
 
 @code {
-    private List<ClassItem> StudentClasses = new List<ClassItem>();
+    private List<ClassItem> StudentClasses = new();
 
     protected override async Task OnInitializedAsync()
-{
-    // Retrieve the classes for the student from the database
-    var studentId = 1;  // Replace with actual logged-in student ID
-
-   var classes = await DbContext.Classes
-    .Include(c => c.Instructor) // Ensure Instructor is loaded
-    .Where(c => c.StudentCourses.Any(sc => sc.StudentID == 1)) // Filter by StudentID = 1
-    .ToListAsync();
-
-    // For each class, load attendance records properly
-    StudentClasses = new List<ClassItem>();
-    foreach (var c in classes)
     {
-        var attendanceRecords = await DbContext.AttendanceRecords
-    .Where(ar => ar.ClassID == c.ClassID)  // Replace ClassID with the correct reference
-    .Select(ar => new AttendanceRecord
-    {
-        Date = ar.Date,
-        Status = ar.Status
-    })
-    .ToListAsync();
+        var studentId = 2; // Replace with actual logged-in student ID
 
+        var enrolledClasses = await DbContext.StudentCourses
+            .Where(sc => sc.StudentID == studentId)
+            .Join(DbContext.Classes,
+                sc => sc.ClassID,
+                c => c.ClassID,
+                (sc, c) => c)
+            .Include(c => c.Instructor)
+            .Include(c => c.AttendanceRecords)
+            .ToListAsync();
 
-        StudentClasses.Add(new ClassItem(
+        var studentAttendance = await DbContext.AttendanceRecords
+            .Where(ar => ar.StudentID == studentId)
+            .ToListAsync();
+
+        StudentClasses = enrolledClasses.Select(c => new ClassItem(
             c.ClassID,
             c.Name,
             c.Instructor?.Name ?? "Unknown",
             c.Time,
             c.Room,
             c.TotalStudents,
-            attendanceRecords
-        ));
+            studentAttendance
+                .Where(ar => ar.ClassID == c.ClassID)
+                .Select(ar => new AttendanceRecord { Date = ar.Date, Status = ar.Status })
+                .ToList()
+        )).ToList();
     }
-}
-
 
     private double CalculateAttendancePercentage(ClassItem classItem)
     {
-        if (classItem.AttendanceRecords.Count == 0) return 100;
+        if (classItem.AttendanceRecords.Count == 0) return 0;
         var presentCount = classItem.AttendanceRecords.Count(r => r.Status == "Present");
         return Math.Round((double)presentCount / classItem.AttendanceRecords.Count * 100, 2);
     }
@@ -89,124 +97,18 @@
         public string? Instructor { get; set; }
         public string? Time { get; set; }
         public string? Room { get; set; }
-        public int? Credits { get; set; }
-        public List<AttendanceRecord> AttendanceRecords { get; set; } = new List<AttendanceRecord>();
+        public int? Students { get; set; }
+        public List<AttendanceRecord> AttendanceRecords { get; set; }
 
-        public ClassItem(int id, string name, string instructor, string time, string room, int credits, List<AttendanceRecord> attendanceRecords)
+        public ClassItem(int id, string name, string instructor, string time, string room, int students, List<AttendanceRecord> attendanceRecords)
         {
             Id = id;
             Name = name;
             Instructor = instructor;
             Time = time;
             Room = room;
-            Credits = credits;
-            AttendanceRecords = attendanceRecords ?? new List<AttendanceRecord>();
+            Students = students;
+            AttendanceRecords = attendanceRecords;
         }
     }
-
-    public class AttendanceRecord
-    {
-        public DateTime Date { get; set; }
-        public required string Status { get; set; } = "Absent";
-    }
 }
-@* 
-@page "/student"
-
-<PageTitle>My Classes (Student)</PageTitle>
-<div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">My Classes (Student)</h1>
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        @foreach (var classItem in StudentClasses)
-        {
-            <a href="student/class/@classItem.Id" class="no-underline">
-                <div class="bg-white shadow rounded-lg p-4 hover:bg-gray-50 cursor-pointer">
-                    <h2 class="text-xl font-semibold mb-2">@classItem.Name</h2>
-                    <div class="text-gray-600">
-                        <p>Instructor: @classItem.Instructor</p>
-                        <p>Time: @classItem.Time</p>
-                        <div class="mt-2 flex justify-between items-center">
-                            <span class="text-sm">Attendance: @CalculateAttendancePercentage(classItem)%</span>
-                            <span class="text-sm text-@(GetAttendanceColor(classItem))">
-                                @(CalculateAttendancePercentage(classItem) >= 75 ? "Good" : "Low")
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        }
-    </div>
-</div>
-
-@code {
-    private List<ClassItem> StudentClasses = new List<ClassItem>
-    {
-        new ClassItem(1, "Mathematics 101", "Dr. Smith", "Mon/Wed 10:00 AM", "Science Building, Room 302", 3, new List<AttendanceRecord>
-    {
-        new AttendanceRecord { Date = DateTime.Now.AddDays(-7), Status = "Present" },
-        new AttendanceRecord { Date = DateTime.Now.AddDays(-14), Status = "Absent" },
-        new AttendanceRecord { Date = DateTime.Now.AddDays(-21), Status = "Present" }
-    }),
-    new ClassItem(2, "Computer Science 205", "Prof. Johnson", "Tue/Thu 1:00 PM", "Tech Center, Room 105", 4, new List<AttendanceRecord>
-    {
-        new AttendanceRecord { Date = DateTime.Now.AddDays(-5), Status = "Present" },
-        new AttendanceRecord { Date = DateTime.Now.AddDays(-12), Status = "Present" },
-        new AttendanceRecord { Date = DateTime.Now.AddDays(-19), Status = "Absent" }
-    }),
-    new ClassItem(3, "Computer Science 301", "Prof. Sam", "Fri 1:00 PM", "Tech Center, Room 301", 4, new List<AttendanceRecord>
-    {
-        new AttendanceRecord { Date = DateTime.Now.AddDays(-5), Status = "Present" },
-        new AttendanceRecord { Date = DateTime.Now.AddDays(-12), Status = "Present" },
-        new AttendanceRecord { Date = DateTime.Now.AddDays(-19), Status = "Absent" }
-    })
-    };
-
-    private double CalculateAttendancePercentage(ClassItem classItem)
-    {
-        if (classItem.AttendanceRecords.Count == 0) return 100;
-        var presentCount = classItem.AttendanceRecords.Count(r => r.Status == "Present");
-        return Math.Round((double)presentCount / classItem.AttendanceRecords.Count * 100, 2);
-    }
-
-    private string GetAttendanceColor(ClassItem classItem)
-    {
-        var percentage = CalculateAttendancePercentage(classItem);
-        return percentage >= 75 ? "green-600" : "red-600";
-    }
-
-    
-  public class ClassItem
-{
-    // Make Id and Credits nullable
-    public int? Id { get; set; }
-    
-    // Make Name, Instructor, Time, and Room nullable as well
-    public string? Name { get; set; }
-    public string? Instructor { get; set; }
-    public string? Time { get; set; }
-    public string? Room { get; set; }  // Nullable property (Room can be unknown)
-    
-    // Credits are nullable as well
-    public int? Credits { get; set; }
-    
-    // Ensure AttendanceRecords is never null (it defaults to an empty list)
-    public List<AttendanceRecord> AttendanceRecords { get; set; } = new List<AttendanceRecord>();
-         public ClassItem(int id, string name, string instructor, string time, string room, int credits, List<AttendanceRecord> attendanceRecords)
-    {
-        Id = id;
-        Name = name;
-        Instructor = instructor;
-        Time = time;
-        Room = room;
-        Credits = credits;
-        AttendanceRecords = attendanceRecords ?? new List<AttendanceRecord>();  // Ensure it's not null
-    }
-}
-
-
-    public class AttendanceRecord
-    {
-        public DateTime Date { get; set; }
-    public required string Status { get; set; } = "Absent"; // Default value
-    }
-} *@
