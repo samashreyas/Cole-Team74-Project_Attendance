@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using YourNamespace.Services;
+using AttendanceSystem.Services;
 
-namespace YourNamespace.Controllers
+namespace AttendanceSystem.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -10,11 +10,12 @@ namespace YourNamespace.Controllers
     {
         private readonly LoginService _loginService;
 
-        public AuthController(IConfiguration config)
+        public AuthController(IConfiguration config, IHttpContextAccessor httpContextAccessor)
         {
             string connStr = config.GetConnectionString("DefaultConnection");
-            _loginService = new LoginService(connStr);
+            _loginService = new LoginService(connStr, httpContextAccessor);
         }
+
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
