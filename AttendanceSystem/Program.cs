@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using AttendanceSystem.Data;
 using AttendanceSystem.Areas.Identity;
 using AttendanceSystem.Data.Models;  // Add this for AttendanceDbContext
+using AttendanceSystem.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+builder.Services.AddScoped<AuthService>();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddSingleton<WeatherForecastService>();
 
