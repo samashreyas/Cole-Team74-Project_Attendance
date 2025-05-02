@@ -44,7 +44,7 @@
                                   rows="4"
                                   placeholder="Type your answer here..."
                                   @bind="StudentAnswer">
-                                </textarea>
+                                        </textarea>
 
                         <div class="flex justify-end space-x-2">
                             <button class="px-4 py-2 bg-gray-300 rounded"
@@ -153,6 +153,7 @@
     private string DailyQuestion { get; set; } = "";
     private string StudentAnswer { get; set; } = "";
 
+
     protected override async Task OnInitializedAsync()
     {
         try
@@ -162,11 +163,15 @@
 
             // Get the class from the database
             var dbClass = await DbContext.Classes
-                .Include(c => c.Instructor)
                 .FirstOrDefaultAsync(c => c.ClassID == Id);
+
+            string instructorName = "Unknown";
 
             if (dbClass != null)
             {
+                var instructor = await DbContext.Users.FirstOrDefaultAsync(u => u.UserID == dbClass.InstructorID);
+                instructorName = instructor != null ? instructor.FirstName + " " + instructor.LastName : "Unknown";
+
                 // Get attendance records for this student and class
                 var attendanceRecords = await DbContext.AttendanceRecords
                     .Where(ar => ar.ClassID == Id && ar.StudentID == studentId)
@@ -176,7 +181,7 @@
                 CurrentClass = new ClassItem(
                     dbClass.ClassID,
                     dbClass.Name,
-                    dbClass.Instructor?.Name ?? "Unknown",
+                    instructorName,
                     dbClass.Time,
                     dbClass.Room,
                     dbClass.TotalStudents,
@@ -206,6 +211,7 @@
             DebugMessage = $"Error loading data: {ex.Message}";
         }
     }
+
 
     private bool ShouldShowAddAttendanceButton()
     {
