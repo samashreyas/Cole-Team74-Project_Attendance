@@ -195,54 +195,74 @@
     private string selectedQuestionMessage = "";
     private bool isSuccess = false;
 
-    protected override async Task OnInitializedAsync()
+    private bool _hasLoaded = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var dbClass = await DbContext.Classes
-            .Include(c => c.Instructor)
-            .FirstOrDefaultAsync(c => c.ClassID == Id);
-
-        if (dbClass != null)
+        if (!_hasLoaded)
         {
-            var enrolledStudents = await DbContext.StudentCourses
-                .Where(sc => sc.ClassID == Id)
-                .Join(DbContext.Students,
-                    sc => sc.StudentID,
-                    s => s.StudentID,
-                    (sc, s) => s)
-                .ToListAsync();
+            _hasLoaded = true;
 
-            var classAttendance = await DbContext.AttendanceRecords
-                .Where(ar => ar.ClassID == Id)
-                .ToListAsync();
+            var dbClass = await DbContext.Classes
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.ClassID == Id);
 
-            var students = enrolledStudents.Select(s => new StudentItem
+            if (dbClass != null)
+            {
+                CurrentClass = new ClassItem
+                    {
+                        ClassID = dbClass.ClassID,
+                        Name = dbClass.Name
+                    };
+
+                var enrolledStudents = await DbContext.StudentCourses
+                    .Where(sc => sc.ClassID == Id)
+                    .Join(DbContext.Users.Where(u => u.RoleID == 2),
+                        sc => sc.StudentID,
+                        u => u.UserID,
+                        (sc, u) => new StudentItem
+                            {
+                                Name = $"{u.FirstName} {u.LastName}",
+                                StudentID = u.UserID
+                            })
+                    .ToListAsync();
+
+                var classAttendance = await DbContext.AttendanceRecords
+                    .Where(ar => ar.ClassID == Id)
+                    .ToListAsync();
+
+                foreach (var student in enrolledStudents)
                 {
-                    Name = s.Name,
-                    StudentID = s.StudentID,
-                    AttendanceRecords = classAttendance
-                        .Where(ar => ar.StudentID == s.StudentID)
+                    student.AttendanceRecords = classAttendance
+                        .Where(ar => ar.StudentID == student.StudentID)
                         .Select(ar => new AttendanceRecord
+                            {
+                                Date = ar.Date,
+                                Status = ar.Status
+                            })
+                        .ToList();
+                }
+
+                ClassQuestions = await DbContext.Questions
+                    .Where(q => q.ClassID == Id)
+                    .Select(q => new QuestionItem
                         {
-                            Date = ar.Date,
-                            Status = ar.Status,
-                            ClassID = ar.ClassID,
-                            StudentID = ar.StudentID
-                        }).ToList()
-                }).ToList();
+                            QuestionText = q.QuestionText
+                        })
+                    .ToListAsync();
 
-            CurrentClass = new ClassItem
-                {
-                    ClassID = dbClass.ClassID,
-                    Name = dbClass.Name,
-                    Students = students
-                };
+                DistinctAttendanceDates = classAttendance
+                    .Select(ar => ar.Date.Date)
+                    .ToHashSet();
 
-            DistinctAttendanceDates = classAttendance.Select(ar => ar.Date.Date).ToHashSet();
-
-            // Load questions for this class
-            await LoadQuestions();
+                StateHasChanged(); // force re-render after data loads
+            }
         }
     }
+
+
+
+
 
     private async Task LoadQuestions()
     {
