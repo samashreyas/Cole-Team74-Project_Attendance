@@ -42,7 +42,7 @@ namespace AttendanceSystem.Data.Models
             // User
             modelBuilder.Entity<User>(entity =>
             {
-                entity.ToTable("user"); 
+                entity.ToTable("user");
                 entity.HasKey(e => e.UserID);
                 entity.Property(e => e.UserID).HasColumnName("userID");
                 entity.Property(e => e.FirstName).HasColumnName("first_name");
@@ -51,7 +51,6 @@ namespace AttendanceSystem.Data.Models
                 entity.Property(e => e.RoleID).HasColumnName("role_id");
                 entity.Property(e => e.UTD_ID).HasColumnName("UTD_ID");
             });
-
 
             // StudentCourses
             modelBuilder.Entity<StudentCourse>()
@@ -71,18 +70,17 @@ namespace AttendanceSystem.Data.Models
                 .WithMany(c => c.StudentCourses)
                 .HasForeignKey(sc => sc.ClassID);
 
-
             // Attendance
             modelBuilder.Entity<AttendanceRecord>()
                 .ToTable("attendance")
-                .HasKey(ar => new { ar.StudentID, ar.ClassID, ar.Date }); // Composite key
+                .HasKey(ar => new { ar.StudentID, ar.ClassID, ar.Date });
 
             modelBuilder.Entity<AttendanceRecord>().Property(ar => ar.StudentID).HasColumnName("studentID");
             modelBuilder.Entity<AttendanceRecord>().Property(ar => ar.ClassID).HasColumnName("classID");
             modelBuilder.Entity<AttendanceRecord>().Property(ar => ar.Date).HasColumnName("sessionDate");
             modelBuilder.Entity<AttendanceRecord>().Property(ar => ar.Status).HasColumnName("status");
 
-            // Classes / Courses
+            // Classes
             modelBuilder.Entity<Class>()
                 .ToTable("course")
                 .HasKey(c => c.ClassID);
@@ -95,12 +93,11 @@ namespace AttendanceSystem.Data.Models
 
             // Questions
             modelBuilder.Entity<Question>()
-                .ToTable("question_banks")
+                .ToTable("quiz questions")
                 .HasKey(q => q.QuestionText);
 
             modelBuilder.Entity<Question>().Property(q => q.QuestionText).HasColumnName("question_text");
-            modelBuilder.Entity<Question>().Property(q => q.ClassID).HasColumnName("class_id");
-            modelBuilder.Entity<Question>().Property(q => q.Selected).HasColumnName("selected");
+            modelBuilder.Entity<Question>().Property(q => q.ClassID).HasColumnName("bankID");
 
             modelBuilder.Entity<Question>()
                 .HasOne(q => q.Class)
@@ -147,7 +144,6 @@ namespace AttendanceSystem.Data.Models
         public int RoleID { get; set; }
     }
 
-
     public class Student
     {
         public int StudentID { get; set; }
@@ -175,6 +171,8 @@ namespace AttendanceSystem.Data.Models
     {
         public string QuestionText { get; set; }
         public int ClassID { get; set; }
+
+        [NotMapped]
         public bool Selected { get; set; }
 
         public Class Class { get; set; }
