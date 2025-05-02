@@ -17,10 +17,10 @@
                 @if (ShouldShowAddAttendanceButton())
                 {
                     <button type="button"
-                        style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;"
-                        @onclick="ShowQuestionPrompt"
-                        onmouseover="this.style.backgroundColor='#0056b3'"
-                        onmouseout="this.style.backgroundColor='#007bff'">
+                            style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;"
+                            @onclick="ShowQuestionPrompt"
+                            onmouseover="this.style.backgroundColor='#0056b3'"
+                            onmouseout="this.style.backgroundColor='#007bff'">
                         Add Attendance Record
                     </button>
                 }
@@ -39,23 +39,20 @@
                     <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
                         <h3 class="text-xl font-semibold mb-4">Daily Question</h3>
                         <p class="mb-4">@DailyQuestion</p>
-                        
-                        <textarea 
-                            class="w-full p-2 border rounded mb-4" 
-                            rows="4" 
-                            placeholder="Type your answer here..."
-                            @bind="StudentAnswer">
-                        </textarea>
-                        
+
+                        <textarea class="w-full p-2 border rounded mb-4"
+                                  rows="4"
+                                  placeholder="Type your answer here..."
+                                  @bind="StudentAnswer">
+                                </textarea>
+
                         <div class="flex justify-end space-x-2">
-                            <button 
-                                class="px-4 py-2 bg-gray-300 rounded"
-                                @onclick="CancelQuestionPrompt">
+                            <button class="px-4 py-2 bg-gray-300 rounded"
+                                    @onclick="CancelQuestionPrompt">
                                 Cancel
                             </button>
-                            <button 
-                                class="px-4 py-2 bg-blue-500 text-white rounded"
-                                @onclick="SubmitAnswerAndAddAttendance">
+                            <button class="px-4 py-2 bg-blue-500 text-white rounded"
+                                    @onclick="SubmitAnswerAndAddAttendance">
                                 Submit
                             </button>
                         </div>
@@ -93,7 +90,7 @@
                     }
                 </tbody>
             </table>
-            <div style="padding-top: 1rem;"></div> 
+            <div style="padding-top: 1rem;"></div>
         </div>
 
         <div class="border rounded-md shadow-sm p-4">
@@ -111,11 +108,12 @@
                     <p><strong>Total Classes:</strong> @CurrentClass.AttendanceRecords.Count</p>
                     <p><strong>Days Present:</strong> @PresentDays</p>
                     <p><strong>Days Absent:</strong> @AbsentDays</p>
-                    <p><strong>Attendance Percentage: </strong>
+                    <p>
+                        <strong>Attendance Percentage: </strong>
                         @if (CurrentClass.AttendanceRecords.Any())
                         {
                             <span class="@(AttendancePercentage >= 75 ? "text-green-600" : "text-red-600")">
-                               @AttendancePercentage%
+                                @AttendancePercentage%
                             </span>
                         }
                         else
@@ -131,7 +129,7 @@
     {
         <p>Class not found.</p>
     }
-    
+
     @if (!string.IsNullOrEmpty(DebugMessage))
     {
         <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4 mt-4">
@@ -149,7 +147,7 @@
     private int AbsentDays { get; set; }
     private double AttendancePercentage { get; set; }
     private string DebugMessage { get; set; } = "";
-    
+
     // Question handling properties
     private bool IsQuestionPromptVisible { get; set; } = false;
     private string DailyQuestion { get; set; } = "";
@@ -157,23 +155,23 @@
 
     protected override async Task OnInitializedAsync()
     {
-        try 
+        try
         {
             // Get the student ID - replace with actual auth logic when implemented
             var studentId = 2;
-            
+
             // Get the class from the database
             var dbClass = await DbContext.Classes
                 .Include(c => c.Instructor)
                 .FirstOrDefaultAsync(c => c.ClassID == Id);
-                
+
             if (dbClass != null)
             {
                 // Get attendance records for this student and class
                 var attendanceRecords = await DbContext.AttendanceRecords
                     .Where(ar => ar.ClassID == Id && ar.StudentID == studentId)
                     .ToListAsync();
-                
+
                 // Create the ClassItem for display
                 CurrentClass = new ClassItem(
                     dbClass.ClassID,
@@ -182,17 +180,17 @@
                     dbClass.Time,
                     dbClass.Room,
                     dbClass.TotalStudents,
-                    attendanceRecords.Select(ar => new AttendanceRecord 
-                    { 
-                        Date = ar.Date, 
-                        Status = ar.Status 
-                    }).ToList()
+                    attendanceRecords.Select(ar => new AttendanceRecord
+                        {
+                            Date = ar.Date,
+                            Status = ar.Status
+                        }).ToList()
                 );
-                
+
                 // Calculate statistics
                 PresentDays = CurrentClass.AttendanceRecords.Count(r => r.Status == "Present");
                 AbsentDays = CurrentClass.AttendanceRecords.Count(r => r.Status == "Absent");
-                
+
                 if (CurrentClass.AttendanceRecords.Any())
                 {
                     AttendancePercentage = Math.Round((double)PresentDays / CurrentClass.AttendanceRecords.Count * 100, 2);
@@ -269,7 +267,7 @@
         {
             DebugMessage = $"Error loading question: {ex.Message}";
         }
-        
+
         StateHasChanged();
     }
 
@@ -288,53 +286,53 @@
         {
             var studentId = 2; // Replace with actual student ID from auth
             var today = DateTime.Now.Date;
-            
+
             // 1. Create question response entity
             if (!string.IsNullOrEmpty(DailyQuestion) && !string.IsNullOrEmpty(StudentAnswer))
             {
                 // Create a new QuestionResponse entity (not a view model)
                 var questionResponse = new QuestionResponse
-                {
-                    QuestionText = DailyQuestion,
-                    StudentID = studentId,
-                    ClassID = Id,
-                    Answer = StudentAnswer
-                };
-                
+                    {
+                        QuestionText = DailyQuestion,
+                        StudentID = studentId,
+                        ClassID = Id,
+                        Answer = StudentAnswer
+                    };
+
                 // Add to DbContext
                 DbContext.QuestionResponses.Add(questionResponse);
             }
-            
+
             // 2. Create attendance record if it doesn't exist for today
             if (!CurrentClass.AttendanceRecords.Any(r => r.Date.Date == today))
             {
                 // Create a new AttendanceRecord entity (not a view model)
                 var newRecord = new AttendanceSystem.Data.Models.AttendanceRecord
-                {
-                    Date = today,
-                    Status = "Present",
-                    ClassID = Id,
-                    StudentID = studentId
-                };
-                
+                    {
+                        Date = today,
+                        Status = "Present",
+                        ClassID = Id,
+                        StudentID = studentId
+                    };
+
                 // Add to DbContext
                 DbContext.AttendanceRecords.Add(newRecord);
-                
+
                 // Save both changes in one transaction
                 await DbContext.SaveChangesAsync();
-                
+
                 // Update view model
                 CurrentClass.AttendanceRecords.Add(new AttendanceRecord
-                {
-                    Date = today,
-                    Status = "Present"
-                });
-                
+                    {
+                        Date = today,
+                        Status = "Present"
+                    });
+
                 // Update statistics
                 PresentDays = CurrentClass.AttendanceRecords.Count(r => r.Status == "Present");
                 AbsentDays = CurrentClass.AttendanceRecords.Count(r => r.Status == "Absent");
                 AttendancePercentage = Math.Round((double)PresentDays / CurrentClass.AttendanceRecords.Count * 100, 2);
-                
+
                 DebugMessage = "Successfully recorded attendance and saved your answer.";
             }
             else
@@ -343,7 +341,7 @@
                 await DbContext.SaveChangesAsync();
                 DebugMessage = "Saved your answer. Attendance record for today already exists.";
             }
-            
+
             // Close the prompt
             IsQuestionPromptVisible = false;
             StudentAnswer = "";
@@ -352,7 +350,7 @@
         {
             DebugMessage = $"Error saving data: {ex.Message}";
         }
-        
+
         StateHasChanged();
     }
 
@@ -364,7 +362,7 @@
         public string? Time { get; set; }
         public string? Room { get; set; }
         public int? Students { get; set; }
-        public List<AttendanceRecord> AttendanceRecords { get; set; } 
+        public List<AttendanceRecord> AttendanceRecords { get; set; }
 
         public ClassItem(int id, string name, string instructor, string time, string room, int students, List<AttendanceRecord> attendanceRecords)
         {

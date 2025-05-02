@@ -1,0 +1,7 @@
+C:\Users\jacks\Downloads\testes3\AttendanceSystem\wwwroot\css\open-iconic\font\fonts\open-iconic.svg
+C:\Users\jacks\Downloads\testes3\AttendanceSystem\wwwroot\css\open-iconic\font\css\open-iconic-bootstrap.min.css
+C:\Users\jacks\Downloads\testes3\AttendanceSystem\wwwroot\css\bootstrap\bootstrap.min.css
+C:\Users\jacks\Downloads\testes3\AttendanceSystem\wwwroot\css\bootstrap\bootstrap.min.css.map
+C:\Users\jacks\Downloads\testes3\AttendanceSystem\wwwroot\css\site.css
+C:\Users\jacks\Downloads\testes3\AttendanceSystem\wwwroot\css\open-iconic\README.md
+C:\Users\jacks\Downloads\testes3\AttendanceSystem\wwwroot\css\open-iconic\font\fonts\open-iconic.otf

@@ -12,9 +12,9 @@
         transition: background-color 0.2s;
     }
 
-    .blue-button:hover {
-        background-color: #2563eb;
-    }
+        .blue-button:hover {
+            background-color: #2563eb;
+        }
 
     table {
         border-collapse: collapse;
@@ -41,9 +41,9 @@
         background-color: #f9f9f9;
     }
 
-    tbody tr:nth-child(even) {
-        background-color: #f9f9f9;
-    }
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
 
     .content-indented {
         margin-left: 1.25rem;
@@ -78,14 +78,14 @@
                             Select Question
                         </button>
                     </div>
-                    
+
                     @if (!string.IsNullOrEmpty(selectedQuestionMessage))
                     {
                         <div class="mt-2 @(isSuccess ? "text-green-600" : "text-red-600")">
                             @selectedQuestionMessage
                         </div>
                     }
-                    
+
                     @if (SelectedQuestion != null)
                     {
                         <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded">
@@ -216,29 +216,29 @@
                 .ToListAsync();
 
             var students = enrolledStudents.Select(s => new StudentItem
-            {
-                Name = s.Name,
-                StudentID = s.StudentID,
-                AttendanceRecords = classAttendance
-                    .Where(ar => ar.StudentID == s.StudentID)
-                    .Select(ar => new AttendanceRecord
-                    {
-                        Date = ar.Date,
-                        Status = ar.Status,
-                        ClassID = ar.ClassID,
-                        StudentID = ar.StudentID
-                    }).ToList()
-            }).ToList();
+                {
+                    Name = s.Name,
+                    StudentID = s.StudentID,
+                    AttendanceRecords = classAttendance
+                        .Where(ar => ar.StudentID == s.StudentID)
+                        .Select(ar => new AttendanceRecord
+                        {
+                            Date = ar.Date,
+                            Status = ar.Status,
+                            ClassID = ar.ClassID,
+                            StudentID = ar.StudentID
+                        }).ToList()
+                }).ToList();
 
             CurrentClass = new ClassItem
-            {
-                ClassID = dbClass.ClassID,
-                Name = dbClass.Name,
-                Students = students
-            };
+                {
+                    ClassID = dbClass.ClassID,
+                    Name = dbClass.Name,
+                    Students = students
+                };
 
             DistinctAttendanceDates = classAttendance.Select(ar => ar.Date.Date).ToHashSet();
-            
+
             // Load questions for this class
             await LoadQuestions();
         }
@@ -250,15 +250,15 @@
         var questions = await DbContext.Questions
             .Where(q => q.ClassID == Id)
             .Select(q => new QuestionItem
-            {
-                QuestionText = q.QuestionText,
-                ClassID = q.ClassID,
-                Selected = q.Selected
-            })
+                {
+                    QuestionText = q.QuestionText,
+                    ClassID = q.ClassID,
+                    Selected = q.Selected
+                })
             .ToListAsync();
-        
+
         ClassQuestions = questions;
-        
+
         // Find currently selected question
         SelectedQuestion = questions.FirstOrDefault(q => q.Selected);
     }
@@ -278,17 +278,17 @@
             var questionsToUpdate = await DbContext.Questions
                 .Where(q => q.ClassID == Id)
                 .ToListAsync();
-                
+
             foreach (var q in questionsToUpdate)
             {
                 q.Selected = (q.QuestionText == selectedQuestionText);
             }
-            
+
             await DbContext.SaveChangesAsync();
-            
+
             // Reload questions to show changes
             await LoadQuestions();
-            
+
             selectedQuestionMessage = "Question successfully selected.";
             isSuccess = true;
         }
@@ -311,12 +311,12 @@
         else
         {
             student.AttendanceRecords.Add(new AttendanceRecord
-            {
-                Date = date,
-                Status = newStatus,
-                ClassID = Id,
-                StudentID = student.StudentID
-            });
+                {
+                    Date = date,
+                    Status = newStatus,
+                    ClassID = Id,
+                    StudentID = student.StudentID
+                });
             DistinctAttendanceDates.Add(date.Date);
         }
     }
@@ -358,12 +358,12 @@
                 else
                 {
                     DbContext.AttendanceRecords.Add(new AttendanceRecord
-                    {
-                        ClassID = record.ClassID,
-                        StudentID = record.StudentID,
-                        Date = record.Date.Date,
-                        Status = record.Status
-                    });
+                        {
+                            ClassID = record.ClassID,
+                            StudentID = record.StudentID,
+                            Date = record.Date.Date,
+                            Status = record.Status
+                        });
                 }
             }
         }
@@ -384,7 +384,7 @@
         public string Name { get; set; } = "";
         public List<AttendanceRecord> AttendanceRecords { get; set; } = new();
     }
-    
+
     private class QuestionItem
     {
         public string QuestionText { get; set; } = "";
