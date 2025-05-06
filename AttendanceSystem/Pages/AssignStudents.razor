@@ -1,0 +1,162 @@
+﻿@* AssignStudents page -- Only accessible through Professor dashboard. *@
+@* Here, professor can add/remove students from the database into classes*@
+
+@using AttendanceSystem.Data.Models
+
+@page "/assign-students"
+@inject DatabaseService DbService
+
+
+<h3>Assign Students to Class</h3>
+
+@if (classList is null || studentList is null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <label>Select a class:</label>
+    <select class="form-control" @onchange="OnClassChanged">
+        <option value="">-- Select a Class --</option>
+        @foreach (var c in classes)
+        {
+            <option value="@c.ClassID" selected="@(selectedClassId == c.ClassID)">
+                @c.ClassName
+            </option>
+        }
+    </select>
+
+
+    @if (selectedClassId != null)
+    {
+        <h4>Select students to add:</h4>
+        <div style="max-height: 300px; overflow-y: scroll;">
+            @foreach (var student in studentList)
+            {
+                <div>
+                    <input type="checkbox" @bind="studentSelections[student.StudentID]" />
+                    @student.LastName, @student.FirstName (@student.Username)
+                </div>
+            }
+        </div>
+
+        <button class="btn btn-primary mt-2" @onclick="AssignStudentsToClass">Assign Selected</button>
+        <p>@statusMessage</p>
+    }
+
+
+    @if (enrolledStudents != null && enrolledStudents.Count > 0)
+    {
+        <h4>Students Currently in Class:</h4>
+        <div style="max-height: 300px; overflow-y: scroll;">
+            @foreach (var student in enrolledStudents)
+            {
+                <div>
+                    <input type="checkbox" @bind="removalSelections[student.StudentID]" />
+                    @student.LastName, @student.FirstName (@student.Username)
+                </div>
+            }
+        </div>
+        <button class="btn btn-danger mt-2" @onclick="RemoveSelectedStudents">Remove Selected</button>
+    }
+
+
+
+
+}
+
+@code {
+    private List<ClassInfo> classes = new();
+
+    private List<ClassInfo> classList;
+    private List<Student> studentList;
+    private Dictionary<long, bool> studentSelections = new();
+    private int? selectedClassId;
+    private string statusMessage;
+
+    private List<Student> enrolledStudents;
+    private Dictionary<long, bool> removalSelections = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        classes = await DbService.GetAllClassesAsync();
+
+        // Optional: reset these if needed
+        enrolledStudents = new List<Student>();
+        removalSelections = new Dictionary<long, bool>();
+
+        classList = await DbService.GetAllClassesAsync();
+        studentList = await DbService.GetAllStudentsAsync();
+
+        foreach (var student in studentList)
+        {
+            studentSelections[student.StudentID] = false;
+        }
+    }
+
+    private async Task AssignStudentsToClass()
+    {
+        if (selectedClassId == null)
+        {
+            statusMessage = "❌ Please select a class.";
+            return;
+        }
+
+        int addedCount = 0;
+
+        foreach (var kvp in studentSelections.Where(kvp => kvp.Value))
+        {
+            await DbService.AddStudentToClassAsync(selectedClassId.Value, kvp.Key);
+            addedCount++;
+        }
+
+        statusMessage = $"✅ Assigned {addedCount} students to class. (Duplicates have been skipped)";
+    }
+
+    private async Task OnClassChanged(ChangeEventArgs e)
+    {
+        selectedClassId = int.TryParse(e.Value?.ToString(), out var val) ? val : (int?)null;
+        statusMessage = "";
+        if (selectedClassId != null)
+        {
+            enrolledStudents = await DbService.GetStudentsInClassAsync(selectedClassId.Value);
+
+            removalSelections.Clear();
+            foreach (var s in enrolledStudents)
+            {
+                removalSelections[s.StudentID] = false;
+            }
+        }
+    }
+
+
+
+    private async Task RemoveSelectedStudents()
+    {
+        if (selectedClassId == null)
+        {
+            statusMessage = "❌ Please select a class.";
+            return;
+        }
+
+        int removedCount = 0;
+
+        foreach (var kvp in removalSelections.Where(kvp => kvp.Value))
+        {
+            await DbService.RemoveStudentFromClassAsync(selectedClassId.Value, kvp.Key);
+            removedCount++;
+        }
+
+        statusMessage = $"✅ Removed {removedCount} student(s) from the class.";
+
+        // Refresh the list
+        enrolledStudents = await DbService.GetStudentsInClassAsync(selectedClassId.Value);
+        removalSelections.Clear();
+        foreach (var s in enrolledStudents)
+        {
+            removalSelections[s.StudentID] = false;
+        }
+    }
+
+
+}
