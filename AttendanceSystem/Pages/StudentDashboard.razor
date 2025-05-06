@@ -47,7 +47,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var studentId = 2; // Replace with actual logged-in student ID
+        var studentId = 1; // Replace with actual logged-in student ID
 
         var enrolledClasses = await DbContext.StudentCourses
             .Where(sc => sc.StudentID == studentId)

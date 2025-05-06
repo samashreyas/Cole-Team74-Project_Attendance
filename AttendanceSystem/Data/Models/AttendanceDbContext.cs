@@ -41,6 +41,7 @@ modelBuilder.Entity<QuestionResponse>()
     .Property(qr => qr.Answer)
     .HasColumnName("answer");
 
+
             // Student configuration
             modelBuilder.Entity<Student>(entity =>
             {
@@ -137,6 +138,17 @@ modelBuilder.Entity<QuestionResponse>()
                 .Property(q => q.Selected)
                 .HasColumnName("selected");
 
+            
+    modelBuilder.Entity<Question>()
+    .Property(q => q.AnswerChoices)
+    .HasColumnName("answer_choices");
+
+                
+    modelBuilder.Entity<Question>()
+    .Property(q => q.CorrectAnswer)
+    .HasColumnName("correct_answer");
+
+
             modelBuilder.Entity<Question>()
                 .HasOne(q => q.Class)
                 .WithMany(c => c.Questions)
@@ -203,14 +215,19 @@ modelBuilder.Entity<QuestionResponse>()
         public ICollection<StudentCourse> StudentCourses { get; set; }
     }
 
+    
+
     public class Question
-    {
-        // Using QuestionText as primary key since that's what appears to be the primary key in your database
-        public string QuestionText { get; set; }
-        public int ClassID { get; set; }
-        public bool Selected { get; set; }
-        
-        // Navigation property to Class
-        public Class Class { get; set; }
-    }
+{
+    public string QuestionText { get; set; } = "";
+    public int ClassID { get; set; }
+    public bool Selected { get; set; }
+    
+    // New properties for multiple choice
+    public string? AnswerChoices { get; set; }
+    public string? CorrectAnswer { get; set; }
+    
+    // Navigation properties
+    public Class Class { get; set; }
+}
 }

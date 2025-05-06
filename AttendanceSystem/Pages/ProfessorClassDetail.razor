@@ -54,6 +54,8 @@
         border-radius: 0.25rem;
         border: 1px solid #d1d5db;
     }
+
+    
 </style>
 
 <div class="container mx-auto p-4">
@@ -64,7 +66,7 @@
         <div class="bg-white border rounded-lg p-6 mb-6 space-y-4">
             <!-- Question Selection Section -->
             <div class="mb-4">
-                <h2 class="text-xl font-semibold mb-3">Question Selection</h2>
+                <h2 class="text-xl font-semibold mb-3">Quiz Question Selection</h2>
                 <div class="content-indented">
                     <div class="flex items-center gap-4">
                         <select @bind="selectedQuestionText" class="w-64">
@@ -74,7 +76,7 @@
                                 <option value="@question.QuestionText">@question.QuestionText</option>
                             }
                         </select>
-                        <button @onclick="SelectQuestion" class="blue-button">
+                        <button @onclick="SelectQuestion" class="blue-button content-indented">
                             Select Question
                         </button>
                     </div>
@@ -95,6 +97,57 @@
                     }
                 </div>
             </div>
+
+            <!-- ADD QUESTION SECTION -->
+            <div class="mb-6">
+                <div class="content-indented">
+                    @if (!ShowAddQuestionForm)
+                    {
+                        <button class="blue-button" @onclick="() => ShowAddQuestionForm = true">Add New Question</button>
+                    }
+                    else
+                    {
+                        <div class="border rounded p-4 bg-gray-50 max-w-lg">
+                            <h3 class="font-semibold mb-2">Add a New Question</h3>
+                            <div class="mb-2">
+                                <label class="block font-medium mb-1">Question</label>
+                                <input class="w-full border rounded p-2" @bind="NewQuestionText" />
+                            </div>
+                            <div class="mb-2">
+                                <label class="block font-medium mb-1">Answer Choice 1</label>
+                                <input class="w-full border rounded p-2" @bind="NewAnswer1" />
+                            </div>
+                            <div class="mb-2">
+                                <label class="block font-medium mb-1">Answer Choice 2</label>
+                                <input class="w-full border rounded p-2" @bind="NewAnswer2" />
+                            </div>
+                            <div class="mb-2">
+                                <label class="block font-medium mb-1">Answer Choice 3</label>
+                                <input class="w-full border rounded p-2" @bind="NewAnswer3" />
+                            </div>
+                            <div class="mb-2">
+                                <label class="block font-medium mb-1">Answer Choice 4</label>
+                                <input class="w-full border rounded p-2" @bind="NewAnswer4" />
+                            </div>
+                            <div class="mb-2">
+                                <label class="block font-medium mb-1">Correct Answer (A, B, C, or D)</label>
+                                <input class="w-24 border rounded p-2" @bind="NewCorrectAnswer" maxlength="1" />
+                            </div>
+                            <div class="flex gap-2 mt-4">
+                                <button class="blue-button" @onclick="AddQuestion">Submit</button>
+                                <button class="px-4 py-2 bg-gray-300 rounded" @onclick="CancelAddQuestion">Cancel</button>
+                            </div>
+                            @if (!string.IsNullOrEmpty(AddQuestionMessage))
+                            {
+                                <div class="mt-2 @(AddQuestionSuccess ? "text-green-600" : "text-red-600")">
+                                    @AddQuestionMessage
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+            <!-- END ADD QUESTION SECTION -->
 
             <div class="mb-3">
                 <h2 class="text-xl font-semibold mb-3">Attendance Summary</h2>
@@ -195,6 +248,17 @@
     private string selectedQuestionMessage = "";
     private bool isSuccess = false;
 
+    // ADD QUESTION STATE
+    private bool ShowAddQuestionForm { get; set; } = false;
+    private string NewQuestionText { get; set; } = "";
+    private string NewAnswer1 { get; set; } = "";
+    private string NewAnswer2 { get; set; } = "";
+    private string NewAnswer3 { get; set; } = "";
+    private string NewAnswer4 { get; set; } = "";
+    private string NewCorrectAnswer { get; set; } = "";
+    private string AddQuestionMessage { get; set; } = "";
+    private bool AddQuestionSuccess { get; set; } = false;
+
     protected override async Task OnInitializedAsync()
     {
         var dbClass = await DbContext.Classes
@@ -236,9 +300,8 @@
                 Name = dbClass.Name,
                 Students = students
             };
-
             DistinctAttendanceDates = classAttendance.Select(ar => ar.Date.Date).ToHashSet();
-            
+
             // Load questions for this class
             await LoadQuestions();
         }
@@ -256,9 +319,9 @@
                 Selected = q.Selected
             })
             .ToListAsync();
-        
+
         ClassQuestions = questions;
-        
+
         // Find currently selected question
         SelectedQuestion = questions.FirstOrDefault(q => q.Selected);
     }
@@ -278,17 +341,17 @@
             var questionsToUpdate = await DbContext.Questions
                 .Where(q => q.ClassID == Id)
                 .ToListAsync();
-                
+
             foreach (var q in questionsToUpdate)
             {
                 q.Selected = (q.QuestionText == selectedQuestionText);
             }
-            
+
             await DbContext.SaveChangesAsync();
-            
+
             // Reload questions to show changes
             await LoadQuestions();
-            
+
             selectedQuestionMessage = "Question successfully selected.";
             isSuccess = true;
         }
@@ -297,6 +360,76 @@
             selectedQuestionMessage = $"Error: {ex.Message}";
             isSuccess = false;
         }
+    }
+
+    // ADD QUESTION LOGIC
+    private async Task AddQuestion()
+    {
+        AddQuestionMessage = "";
+        AddQuestionSuccess = false;
+
+        if (string.IsNullOrWhiteSpace(NewQuestionText) ||
+            string.IsNullOrWhiteSpace(NewAnswer1) ||
+            string.IsNullOrWhiteSpace(NewAnswer2) ||
+            string.IsNullOrWhiteSpace(NewAnswer3) ||
+            string.IsNullOrWhiteSpace(NewAnswer4) ||
+            string.IsNullOrWhiteSpace(NewCorrectAnswer))
+        {
+            AddQuestionMessage = "All fields are required.";
+            AddQuestionSuccess = false;
+            return;
+        }
+
+        var choices = new List<string> { NewAnswer1, NewAnswer2, NewAnswer3, NewAnswer4 };
+        var choicesJson = System.Text.Json.JsonSerializer.Serialize(choices);
+
+        var newQuestion = new Question
+        {
+            QuestionText = NewQuestionText,
+            ClassID = Id,
+            Selected = false,
+            AnswerChoices = choicesJson,
+            CorrectAnswer = NewCorrectAnswer.ToUpper()
+        };
+
+        try
+        {
+            DbContext.Questions.Add(newQuestion);
+            await DbContext.SaveChangesAsync();
+
+            AddQuestionMessage = "Question added successfully.";
+            AddQuestionSuccess = true;
+
+            // Reset form
+            NewQuestionText = "";
+            NewAnswer1 = "";
+            NewAnswer2 = "";
+            NewAnswer3 = "";
+            NewAnswer4 = "";
+            NewCorrectAnswer = "";
+
+            // Refresh question list
+            await LoadQuestions();
+
+            ShowAddQuestionForm = false;
+        }
+        catch (Exception ex)
+        {
+            AddQuestionMessage = $"Error: {ex.Message}";
+            AddQuestionSuccess = false;
+        }
+    }
+
+    private void CancelAddQuestion()
+    {
+        ShowAddQuestionForm = false;
+        AddQuestionMessage = "";
+        NewQuestionText = "";
+        NewAnswer1 = "";
+        NewAnswer2 = "";
+        NewAnswer3 = "";
+        NewAnswer4 = "";
+        NewCorrectAnswer = "";
     }
 
     private void UpdateAttendanceStatus(StudentItem student, DateTime date, string? newStatus)
@@ -384,7 +517,7 @@
         public string Name { get; set; } = "";
         public List<AttendanceRecord> AttendanceRecords { get; set; } = new();
     }
-    
+
     private class QuestionItem
     {
         public string QuestionText { get; set; } = "";
