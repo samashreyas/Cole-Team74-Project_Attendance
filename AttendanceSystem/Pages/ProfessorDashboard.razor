@@ -1,8 +1,10 @@
 @page "/professor"
 @using Microsoft.EntityFrameworkCore
 @using AttendanceSystem.Data.Models
+@using System.Security.Claims
 @inject AttendanceDbContext DbContext
-@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthProvider
+
 <style>
     .blue-button {
         background-color: #3b82f6;
@@ -16,18 +18,19 @@
         background-color: #2563eb;
     }
 </style>
+
 <PageTitle>My Classes (Professor)</PageTitle>
 
-<div class="max-w-6xl mx-auto p-6">
-    <h1 class="text-3xl font-semibold text-gray-800 mb-6 text-center">My Classes</h1>
-
-    <div class="mb-4">
+<div class="mb-4">
         <h2 class="font-semibold pb-1">Class Management</h2>
         <div class="space-x-2">
-            <a href="/assign-students?professorId=@professorId" class="blue-button" style="text-decoration: none;">Assign Students</a>
+            <a href="/assign-students?professorId=@ProfessorID" class="blue-button" style="text-decoration: none;">Assign Students</a>
             <a href="/upload-students" class="blue-button" style="text-decoration: none;">Upload Students</a>
         </div>
     </div>
+
+<div class="max-w-6xl mx-auto p-6">
+    <h1 class="text-3xl font-semibold text-gray-800 mb-6 text-center">My Classes</h1>
 
     @if (ProfessorClasses.Count == 0)
     {
@@ -38,17 +41,13 @@
         <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             @foreach (var classItem in ProfessorClasses)
             {
-                <a href="/professor/class/@classItem.Id"
+                <a href="/professor/class/@classItem.ClassID"
                    class="block no-underline text-inherit focus:outline-none focus:ring-2 focus:ring-blue-300">
                     <div class="text-gray-800 border border-gray-300 rounded-xl bg-white p-5 hover:shadow-md transition-shadow duration-200">
                         <h2 class="text-lg font-semibold mb-2">@classItem.Name</h2>
                         <div class="text-sm space-y-1">
                             <p><strong>Time:</strong> @classItem.Time</p>
                             <p><strong>Room:</strong> @classItem.Room</p>
-                        </div>
-                        <div class="mt-4 flex justify-between items-center text-sm">
-                            <span>Students Enrolled: <strong>@classItem.TotalStudents</strong></span>
-                            <span class="font-medium text-blue-600">Present Today: @classItem.PresentToday</span>
                         </div>
                     </div>
                 </a>
@@ -58,35 +57,32 @@
 </div>
 
 @code {
-    private List<ProfessorClassItem> ProfessorClasses = new();
-    private int professorId = 1; // TODO: Replace with actual logged-in professor ID
+    private List<Class> ProfessorClasses = new();
 
+    private int ProfessorID;
     protected override async Task OnInitializedAsync()
     {
-        // Query all classes taught by this professor, including attendance and enrollment
-        var classes = await DbContext.Classes
-            .Where(c => c.InstructorID == professorId)
-            .Include(c => c.AttendanceRecords)
-            .ToListAsync();
+        var authState = await AuthProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
 
-        ProfessorClasses = classes.Select(c => new ProfessorClassItem
+        if (!user.Identity?.IsAuthenticated ?? true)
         {
-            Id = c.ClassID,
-            Name = c.Name,
-            Time = c.Time,
-            Room = c.Room,
-            TotalStudents = c.TotalStudents,
-            PresentToday = c.AttendanceRecords.Count(a => a.Date.Date == DateTime.Today && a.Status == "Present")
-        }).ToList();
-    }
+            Console.WriteLine("User not authenticated.");
+            return;
+        }
 
-    public class ProfessorClassItem
-    {
-        public int Id { get; set; }
-        public string Name { get; set; } = "";
-        public string Time { get; set; } = "";
-        public string Room { get; set; } = "";
-        public int TotalStudents { get; set; }
-        public int PresentToday { get; set; }
+        var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier);
+        if (!int.TryParse(userIdClaim?.Value, out int professorId))
+        {
+            Console.WriteLine("Failed to parse professor ID.");
+            return;
+        }
+
+        Console.WriteLine($"Loading classes for ProfessorID = {professorId}");
+        ProfessorID = professorId;
+
+        ProfessorClasses = await DbContext.Classes
+            .Where(c => c.InstructorID == professorId)
+            .ToListAsync();
     }
 }

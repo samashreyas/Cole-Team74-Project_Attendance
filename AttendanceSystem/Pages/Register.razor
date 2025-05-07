@@ -1,5 +1,53 @@
-﻿<h3>Register</h3>
+﻿@page "/register"
+@inject AuthService AuthService
+@inject NavigationManager NavigationManager
+@using AttendanceSystem.Services
+@using AttendanceSystem.Models
+@using System.ComponentModel.DataAnnotations
+
+<h3>Register</h3>
+
+<EditForm Model="@registrationModel" OnValidSubmit="HandleRegister">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>UTD ID:</label>
+        <InputNumber @bind-Value="registrationModel.UTD_ID" class="form-control" />
+    </div>
+    <div>
+        <label>Password:</label>
+        <InputText @bind-Value="registrationModel.Password" type="password" class="form-control" />
+    </div>
+    <div>
+        <label>First Name:</label>
+        <InputText @bind-Value="registrationModel.FirstName" class="form-control" />
+    </div>
+    <div>
+        <label>Last Name:</label>
+        <InputText @bind-Value="registrationModel.LastName" class="form-control" />
+    </div>
+    <div>
+        <label>Role:</label>
+        <select @bind="registrationModel.Role" class="form-control">
+            <option value="0">-- Select Role --</option>
+            <option value="2">Student</option>
+            <option value="1">Professor</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Register</button>
+</EditForm>
 
 @code {
+    private RegistrationModel registrationModel = new();
 
+    private async Task HandleRegister()
+    {
+        var result = await AuthService.RegisterUser(registrationModel);
+        if (result)
+        {
+            NavigationManager.NavigateTo("/login");
+        }
+    }
 }

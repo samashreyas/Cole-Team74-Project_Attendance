@@ -144,6 +144,8 @@
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/5qxtvu2tfb-10uzszoped.gz
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/qnb7kx5ips-9ecj4fqnpz.gz
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/h188nej5jr-69lzu0n0bb.gz
+/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/ykxdqzgyl7-yzxvpipnch.gz
+/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/veb82wehl1-yzxvpipnch.gz
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/staticwebassets.build.json
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/staticwebassets.development.json
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/staticwebassets.build.endpoints.json
@@ -159,5 +161,3 @@
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/AttendanceSystem.pdb
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/AttendanceSystem.genruntimeconfig.cache
 /Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/ref/AttendanceSystem.dll
-/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/ykxdqzgyl7-yzxvpipnch.gz
-/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/compressed/veb82wehl1-yzxvpipnch.gz

@@ -1,7 +1,10 @@
 @page "/student"
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.EntityFrameworkCore
 @using AttendanceSystem.Data.Models
 @inject AttendanceDbContext DbContext
+@inject AuthenticationStateProvider AuthProvider
 
 <PageTitle>My Classes (Student)</PageTitle>
 
@@ -10,34 +13,31 @@
 
     @if (StudentClasses.Count == 0)
     {
-        <p class="text-center text-gray-500">You're not enrolled in any classes yet.</p>
+        <p class="text-center text-red-600 font-semibold">You're not enrolled in any classes yet.</p>
+        <p class="text-center text-sm text-gray-500">Check the logs for debugging info.</p>
     }
     else
     {
         <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             @foreach (var classItem in StudentClasses)
-{
-   <a href="student/class/@classItem.Id" 
-   class="block no-underline text-inherit focus:outline-none focus:ring-2 focus:ring-blue-300">
-    <div class="text-gray-800 border border-gray-300 rounded-xl bg-white p-5 hover:shadow-md transition-shadow duration-200">
-        <h2 class="text-lg font-semibold mb-2">@classItem.Name</h2>
-        <div class="text-sm space-y-1">
-            <p><strong>Instructor:</strong> @classItem.Instructor</p>
-            <p><strong>Time:</strong> @classItem.Time</p>
-            <p><strong>Room:</strong> @classItem.Room</p>
-        </div>
-        <div class="mt-4 flex justify-between items-center text-sm">
-            <span>Attendance: <strong>@CalculateAttendancePercentage(classItem)%</strong></span>
-            <span class="font-medium text-@(GetAttendanceColor(classItem))">
-                @(CalculateAttendancePercentage(classItem) >= 75 ? "Good" : "Low")
-            </span>
-        </div>
-    </div>
-</a>
-
-
-}
-
+            {
+                <a href="student/class/@classItem.Id" class="block no-underline text-inherit focus:outline-none focus:ring-2 focus:ring-blue-300">
+                    <div class="text-gray-800 border border-gray-300 rounded-xl bg-white p-5 hover:shadow-md transition-shadow duration-200">
+                        <h2 class="text-lg font-semibold mb-2">@classItem.Name</h2>
+                        <div class="text-sm space-y-1">
+                            <p><strong>Instructor:</strong> @classItem.Instructor</p>
+                            <p><strong>Time:</strong> @classItem.Time</p>
+                            <p><strong>Room:</strong> @classItem.Room</p>
+                        </div>
+                        <div class="mt-4 flex justify-between items-center text-sm">
+                            <span>Attendance: <strong>@CalculateAttendancePercentage(classItem)%</strong></span>
+                            <span class="font-medium text-@(GetAttendanceColor(classItem))">
+                                @(CalculateAttendancePercentage(classItem) >= 75 ? "Good" : "Low")
+                            </span>
+                        </div>
+                    </div>
+                </a>
+            }
         </div>
     }
 </div>
@@ -47,7 +47,25 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var studentId = 1; // Replace with actual logged-in student ID
+        var authState = await AuthProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (!user.Identity?.IsAuthenticated ?? true)
+        {
+            Console.WriteLine("User not authenticated.");
+            return;
+        }
+
+        var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier);
+        Console.WriteLine($"ClaimTypes.NameIdentifier = {userIdClaim?.Value}");
+
+        if (!int.TryParse(userIdClaim?.Value, out int studentId))
+        {
+            Console.WriteLine("Failed to parse student ID from claim.");
+            return;
+        }
+
+        Console.WriteLine($"Parsed studentId = {studentId}");
 
         var enrolledClasses = await DbContext.StudentCourses
             .Where(sc => sc.StudentID == studentId)
@@ -55,9 +73,20 @@
                 sc => sc.ClassID,
                 c => c.ClassID,
                 (sc, c) => c)
-            .Include(c => c.Instructor)
             .Include(c => c.AttendanceRecords)
             .ToListAsync();
+
+        Console.WriteLine($"Found {enrolledClasses.Count} enrolled classes.");
+        foreach (var ec in enrolledClasses)
+        {
+            Console.WriteLine($" - Class ID: {ec.ClassID}, Name: {ec.Name}");
+        }
+
+        var instructorIds = enrolledClasses.Select(c => c.InstructorID).Distinct().ToList();
+
+        var instructorMap = await DbContext.Users
+            .Where(u => instructorIds.Contains(u.UserID))
+            .ToDictionaryAsync(u => u.UserID, u => $"{u.FirstName} {u.LastName}");
 
         var studentAttendance = await DbContext.AttendanceRecords
             .Where(ar => ar.StudentID == studentId)
@@ -66,15 +95,19 @@
         StudentClasses = enrolledClasses.Select(c => new ClassItem(
             c.ClassID,
             c.Name,
-            c.Instructor?.Name ?? "Unknown",
+            instructorMap.TryGetValue(c.InstructorID, out var name) ? name : "Unknown",
             c.Time,
             c.Room,
-            c.TotalStudents,
+            c.StudentCourses?.Count ?? 0,
             studentAttendance
                 .Where(ar => ar.ClassID == c.ClassID)
                 .Select(ar => new AttendanceRecord { Date = ar.Date, Status = ar.Status })
                 .ToList()
         )).ToList();
+
+        Console.WriteLine($"User authenticated: {user.Identity?.IsAuthenticated}");
+        Console.WriteLine($"NameIdentifier claim: {user.FindFirstValue(ClaimTypes.NameIdentifier)}");
+
     }
 
     private double CalculateAttendancePercentage(ClassItem classItem)

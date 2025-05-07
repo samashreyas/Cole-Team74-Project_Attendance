@@ -9,6 +9,10 @@ namespace AttendanceSystem.Data.Models
         public DbSet<Class> Classes { get; set; }
         public DbSet<Instructor> Instructors { get; set; }
         public DbSet<Student> Students { get; set; }
+        public DbSet<User> Users { get; set; }
+
+        public DbSet<IPAddressLog> IPAddressLogs { get; set; }
+
         public DbSet<StudentCourse> StudentCourses { get; set; }
         public DbSet<AttendanceRecord> AttendanceRecords { get; set; }
         public DbSet<Question> Questions { get; set; }
@@ -49,6 +53,34 @@ modelBuilder.Entity<QuestionResponse>()
                 entity.Property(s => s.StudentID)
                     .HasColumnName("student_id");
             });
+
+            // User
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.ToTable("user");
+                entity.HasKey(e => e.UserID);
+                entity.Property(e => e.UserID).HasColumnName("userID");
+                entity.Property(e => e.FirstName).HasColumnName("first_name");
+                entity.Property(e => e.LastName).HasColumnName("last_name");
+                entity.Property(e => e.PasswordHash).HasColumnName("password_hash");
+                entity.Property(e => e.RoleID).HasColumnName("role_id");
+                entity.Property(e => e.UTD_ID).HasColumnName("UTD_ID");
+            });
+
+            modelBuilder.Entity<IPAddressLog>(entity =>
+{
+    entity.ToTable("ip_address_log");
+
+    entity.HasKey(e => e.ID);
+    entity.Property(e => e.ID).HasColumnName("id");
+    entity.Property(e => e.UserID).HasColumnName("user_id");
+    entity.Property(e => e.IPAddress).HasColumnName("ip_address");
+    entity.Property(e => e.Timestamp).HasColumnName("timestamp");
+
+    entity.HasOne(e => e.User)
+          .WithMany()
+          .HasForeignKey(e => e.UserID);
+});
 
             // StudentCourse configuration
             modelBuilder.Entity<StudentCourse>(entity =>
@@ -207,6 +239,25 @@ modelBuilder.Entity<QuestionResponse>()
 
         public long? StudentID { get; set; }
     }
+
+     public class User
+    {
+        public int UserID { get; set; }
+        public string FirstName { get; set; } = "";
+        public string LastName { get; set; } = "";
+        public int UTD_ID { get; set; }
+        public string PasswordHash { get; set; } = "";
+        public int RoleID { get; set; }
+    }
+
+    public class IPAddressLog
+{
+    public int ID { get; set; }
+    public int UserID { get; set; }
+    public string IPAddress { get; set; }
+    public DateTime Timestamp { get; set; }
+    public User User { get; set; }
+}
 
     public class Student
     {
