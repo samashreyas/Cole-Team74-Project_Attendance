@@ -1,0 +1,178 @@
+@* AssignStudents page -- Only accessible through Professor dashboard. *@
+@using AttendanceSystem.Data.Models
+
+@page "/assign-students"
+@inject DatabaseService DbService
+
+<h3>Assign Students to Class</h3>
+
+@if (classList is null || studentList is null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <label>Select a class:</label>
+    <select class="form-control" @onchange="OnClassChanged">
+        <option value="">-- Select a Class --</option>
+        @foreach (var c in classes)
+        {
+            <option value="@c.id" selected="@(selectedClassId == c.id)">
+                @c.name
+            </option>
+        }
+    </select>
+
+    @if (selectedClassId != null)
+    {
+        <h4>Select students to add:</h4>
+        <div style="max-height: 300px; overflow-y: scroll;">
+            @foreach (var student in availableStudentModels)
+            {
+                <div>
+                    <input type="checkbox" id="add-@student.Student.StudentID"
+                           checked="@student.IsSelected"
+                           @onchange="e => student.IsSelected = (bool)e.Value!" />
+                    @student.Student.LastName, @student.Student.FirstName (@student.Student.Username)
+                </div>
+            }
+        </div>
+
+        <button class="btn btn-primary mt-2" @onclick="AssignStudentsToClass">Assign Selected</button>
+        <p>@statusMessage</p>
+    }
+
+    @if (enrolledStudentModels != null && enrolledStudentModels.Count > 0)
+    {
+        <h4>Students Currently in Class:</h4>
+        <div style="max-height: 300px; overflow-y: scroll;">
+            @foreach (var student in enrolledStudentModels)
+            {
+                <div>
+                    <input type="checkbox" id="remove-@student.Student.StudentID"
+                           checked="@student.IsSelected"
+                           @onchange="e => student.IsSelected = (bool)e.Value!" />
+                    @student.Student.LastName, @student.Student.FirstName (@student.Student.Username)
+                </div>
+            }
+        </div>
+        <button class="btn btn-danger mt-2" @onclick="RemoveSelectedStudents">Remove Selected</button>
+    }
+}
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public int? professorId { get; set; }
+
+    // View model to track selection state
+    private class StudentViewModel
+    {
+        public Student Student { get; set; }
+        public bool IsSelected { get; set; }
+    }
+
+    private List<ClassInfo> classes = new();
+    private List<ClassInfo> classList;
+    private List<Student> studentList;
+    private List<StudentViewModel> availableStudentModels = new();
+    private List<StudentViewModel> enrolledStudentModels = new();
+    private int? selectedClassId;
+    private string statusMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        classes = await DbService.GetAllClassesAsync(professorId.Value);
+        classList = classes;
+        studentList = await DbService.GetAllStudentsAsync();
+        
+        // Initialize available students view models
+        availableStudentModels = studentList.Select(s => new StudentViewModel { 
+            Student = s, 
+            IsSelected = false 
+        }).ToList();
+    }
+
+    private async Task AssignStudentsToClass()
+    {
+        if (selectedClassId == null)
+        {
+            statusMessage = "❌ Please select a class.";
+            return;
+        }
+
+        int addedCount = 0;
+
+        foreach (var studentVM in availableStudentModels.Where(vm => vm.IsSelected))
+        {
+            await DbService.AddStudentToClassAsync(selectedClassId.Value, studentVM.Student.StudentID ?? 0);
+            addedCount++;
+        }
+
+        statusMessage = $"✅ Assigned {addedCount} students to class. (Duplicates skipped)";
+        
+        // Reset selections
+        foreach (var studentVM in availableStudentModels)
+        {
+            studentVM.IsSelected = false;
+        }
+        
+        // Refresh enrolled students
+        if (selectedClassId != null)
+        {
+            await RefreshEnrolledStudents();
+        }
+    }
+
+    private async Task OnClassChanged(ChangeEventArgs e)
+    {
+        selectedClassId = int.TryParse(e.Value?.ToString(), out var val) ? val : (int?)null;
+        statusMessage = "";
+
+        if (selectedClassId != null)
+        {
+            await RefreshEnrolledStudents();
+        }
+    }
+    
+    private async Task RefreshEnrolledStudents()
+    {
+        if (selectedClassId.HasValue)
+        {
+            var students = await DbService.GetStudentsInClassAsync(selectedClassId.Value);
+            enrolledStudentModels = students.Select(s => new StudentViewModel {
+                Student = s,
+                IsSelected = false
+            }).ToList();
+
+            // Update the total_students count in the Classes table
+            await DbService.UpdateClassTotalStudentsAsync(selectedClassId.Value, enrolledStudentModels.Count);
+        }
+        else
+        {
+            enrolledStudentModels.Clear();
+        }
+    }
+
+    private async Task RemoveSelectedStudents()
+    {
+        if (selectedClassId == null)
+        {
+            statusMessage = "❌ Please select a class.";
+            return;
+        }
+
+        int removedCount = 0;
+
+        foreach (var studentVM in enrolledStudentModels.Where(vm => vm.IsSelected))
+        {
+            await DbService.RemoveStudentFromClassAsync(selectedClassId.Value, studentVM.Student.StudentID ?? 0);
+            removedCount++;
+        }
+
+        statusMessage = $"✅ Removed {removedCount} student(s) from the class.";
+
+        // Refresh enrolled students
+        await RefreshEnrolledStudents();
+    }
+}

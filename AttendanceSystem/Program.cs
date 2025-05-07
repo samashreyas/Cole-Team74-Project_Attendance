@@ -26,6 +26,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+builder.Services.AddScoped<DatabaseService>();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddSingleton<WeatherForecastService>();
 

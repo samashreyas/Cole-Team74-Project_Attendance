@@ -1,0 +1,125 @@
+@* Upload students page. Here, professor can upload a .csv file*@
+@* containing lastname, firstnames, usernames, and student ID  *@
+@* -Nathan Kim*@
+
+
+@page "/upload-students"
+@inject DatabaseService DbService
+@using AttendanceSystem.Data.Models
+@using Microsoft.AspNetCore.Components.Forms
+
+<h3>Upload Students CSV</h3>
+
+<InputFile OnChange="HandleFileSelected" accept=".csv" />
+<p>@statusMessage</p>
+
+@if (isPreviewReady && pendingStudents.Any())
+{
+    <h4>Preview</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Last Name</th>
+                <th>First Name</th>
+                <th>Username</th>
+                <th>Student ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in pendingStudents)
+            {
+                <tr>
+                    <td>@student.LastName</td>
+                    <td>@student.FirstName</td>
+                    <td>@student.Username</td>
+                    <td>@student.StudentID</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button class="btn btn-primary" @onclick="ConfirmUpload">Confirm Upload</button>
+}
+
+
+@code {
+    private List<Student> pendingStudents = new();
+    private string statusMessage = "";
+    private bool isPreviewReady = false;
+
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+
+        if (file == null || !file.Name.EndsWith(".csv"))
+        {
+            statusMessage = "Invalid file. Please upload a CSV.";
+            return;
+        }
+
+        try
+        {
+            await using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024);
+            using var memoryStream = new MemoryStream();
+            await stream.CopyToAsync(memoryStream);
+            memoryStream.Position = 0;
+
+            using var reader = new StreamReader(memoryStream);
+            pendingStudents.Clear();
+            bool isFirstLine = true;
+
+            while (!reader.EndOfStream)
+            {
+                var line = await reader.ReadLineAsync();
+                if (isFirstLine)
+                {
+                    isFirstLine = false;
+                    continue;
+                }
+
+                var values = line.Split(','); // change to '\t' if needed
+                if (values.Length >= 4)
+                {
+                    pendingStudents.Add(new Student
+                        {
+                            LastName = values[0].Trim(),
+                            FirstName = values[1].Trim(),
+                            Username = values[2].Trim(),
+                            StudentID = int.Parse(values[3].Trim())
+
+                        });
+                }
+            }
+
+            isPreviewReady = true;
+            statusMessage = $"Preview loaded: {pendingStudents.Count} students ready.";
+        }
+        catch (Exception ex)
+        {
+            statusMessage = $"❌ Error: {ex.Message}";
+        }
+    }
+
+    private async Task ConfirmUpload()
+    {
+        try
+        {
+            int insertedCount = await DbService.InsertStudentsAsync(pendingStudents);
+            int skippedCount = pendingStudents.Count - insertedCount;
+
+            statusMessage = $"✅ Uploaded {insertedCount} new students ({skippedCount} duplicates skipped).";
+
+            // Clear preview
+            pendingStudents.Clear();
+            isPreviewReady = false;
+        }
+        catch (Exception ex)
+        {
+            statusMessage = $"❌ Error during upload: {ex.Message}";
+        }
+    }
+
+
+
+}

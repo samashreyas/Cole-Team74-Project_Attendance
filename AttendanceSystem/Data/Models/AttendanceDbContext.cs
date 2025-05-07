@@ -189,7 +189,7 @@ modelBuilder.Entity<QuestionResponse>()
 
     public class StudentCourse
     {
-        public int StudentID { get; set; }
+        public long StudentID { get; set; }
         public Student Student { get; set; }
 
         public int ClassID { get; set; }
@@ -205,14 +205,19 @@ modelBuilder.Entity<QuestionResponse>()
         public int ClassID { get; set; }
         public Class Class { get; set; }
 
-        public int StudentID { get; set; }
+        public long? StudentID { get; set; }
     }
 
     public class Student
     {
-        public int StudentID { get; set; }
-        public string Name { get; set; }
+        public long? StudentID { get; set; }
+        public string? Name { get; set; }
+
+    public string? LastName { get; set; }
+    public string? FirstName { get; set; }
+    public string? Username { get; set; }
         public ICollection<StudentCourse> StudentCourses { get; set; }
+
     }
 
     

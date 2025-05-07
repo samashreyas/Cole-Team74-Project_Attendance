@@ -24,6 +24,10 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/Pages/AssignStudents.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQXNzaWduU3R1ZGVudHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/Pages/Attendance.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQXR0ZW5kYW5jZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
@@ -62,6 +66,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/Pages/StudentDashboard.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvU3R1ZGVudERhc2hib2FyZC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/Pages/UploadStudents.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVXBsb2FkU3R1ZGVudHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/Shared/LoginDisplay.razor]
