@@ -1,11 +1,15 @@
-﻿@page "/attendance"
+@* First Page after Login. Here, user gets routed to Student Dashboard or Professor Dashboard *@
+@* Routing is done through role (Student,Professor) which is defined for each user in the User table *@
+@* Made by Steven Maddela *@
+
+@page "/attendance"
 @inject NavigationManager Nav
 @code {
     private string UserRole;
 
     protected override void OnInitialized()
     {
-        // Get username from query parameter
+        // Get username from query parameter from login page
         var uri = new Uri(Nav.Uri);
         var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
         var username = query["username"];
