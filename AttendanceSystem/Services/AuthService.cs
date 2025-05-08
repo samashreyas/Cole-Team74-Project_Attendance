@@ -3,6 +3,13 @@ using Microsoft.AspNetCore.Components.Authorization;
 using MySql.Data.MySqlClient;
 using AttendanceSystem.Models;
 
+/*
+        This service handles user authentication and registration for the attendance system.
+        It interacts directly with the MySQL database to register users and verify login credentials.
+        It also manages user authentication state using a custom AuthenticationStateProvider.
+        Made by Jackson Wilson
+*/
+
 namespace AttendanceSystem.Services
 {
     public class AuthService
@@ -16,10 +23,12 @@ namespace AttendanceSystem.Services
             _configuration = configuration;
         }
 
+        // Registers a new user in the MySQL database
         public async Task<bool> RegisterUser(RegistrationModel model)
         {
             try
             {
+                // Validate input
                 if (model == null || model.UTD_ID <= 0 || string.IsNullOrWhiteSpace(model.Password))
                     throw new ArgumentException("Invalid registration data");
 
@@ -29,13 +38,17 @@ namespace AttendanceSystem.Services
 
                 Console.WriteLine($"Registering: UTD_ID={model.UTD_ID}, Role={model.Role}");
 
+                // SQL command to insert user data into the 'user' table
                 var cmd = new MySqlCommand("INSERT INTO user (first_name, last_name, UTD_ID, password_hash, role_id) VALUES (@first_name, @last_name, @utd_id, SHA2(@password, 256), @role)", conn);
+
+                // Bind parameters
                 cmd.Parameters.Add("@first_name", MySqlDbType.VarChar).Value = model.UTD_ID;
                 cmd.Parameters.Add("@last_name", MySqlDbType.VarChar).Value = model.UTD_ID;
                 cmd.Parameters.Add("@utd_id", MySqlDbType.Int32).Value = model.UTD_ID;
                 cmd.Parameters.Add("@password", MySqlDbType.VarChar).Value = model.Password;
                 cmd.Parameters.Add("@role", MySqlDbType.Int32).Value = model.Role;
-
+                
+                // Execute and check success
                 return await cmd.ExecuteNonQueryAsync() > 0;
             }
             catch (MySqlException sqlEx)
@@ -45,10 +58,12 @@ namespace AttendanceSystem.Services
             }
         }
 
+        // Authenticates a user and sets their claims if successful
         public async Task<bool> LoginUser(LoginModel model)
         {
             try
             {
+                // Validate input
                 if (model == null || model.UTD_ID <= 0 || string.IsNullOrWhiteSpace(model.Password))
                     throw new ArgumentException("Invalid login data");
 
@@ -56,7 +71,10 @@ namespace AttendanceSystem.Services
                 using var conn = new MySqlConnection(connStr);
                 await conn.OpenAsync();
 
+                // SQL query to find the user matching UTD_ID and password hash
                 var cmd = new MySqlCommand("SELECT userID, role_id FROM user WHERE UTD_ID = @utd_id AND password_hash = SHA2(@password, 256)", conn);
+
+                // Bind parameters
                 cmd.Parameters.Add("@first_name", MySqlDbType.VarChar).Value = model.UTD_ID;
                 cmd.Parameters.Add("@last_name", MySqlDbType.VarChar).Value = model.UTD_ID;
                 cmd.Parameters.Add("@utd_id", MySqlDbType.Int32).Value = model.UTD_ID;
@@ -65,6 +83,7 @@ namespace AttendanceSystem.Services
                 string roleName = null;
                 int userId = -1;
 
+                // Read user info if found
                 using var reader = await cmd.ExecuteReaderAsync();
                 if (reader.Read())
                 {
@@ -73,6 +92,7 @@ namespace AttendanceSystem.Services
                     roleName = roleId == 1 ? "Professor" : roleId == 2 ? "Student" : "Unknown";
                 }
 
+                // If user is valid, set authentication claims
                 if (roleName != null)
                 {
                     var identity = new ClaimsIdentity(new[]
@@ -96,6 +116,7 @@ namespace AttendanceSystem.Services
             }
         }
 
+        // Logs the user out by resetting the authentication state
         public void Logout()
         {
             ((CustomAuthenticationStateProvider)_authProvider).SetUser(new ClaimsPrincipal(new ClaimsIdentity()));
