@@ -26,7 +26,6 @@ else
         }
     </select>
 
-    @* Once a valid class is selected from the dropdown, the add students section appears below it. *@
     @if (selectedClassId != null)
     {
         <h4>Select students to add:</h4>
@@ -46,7 +45,6 @@ else
         <p>@statusMessage</p>
     }
 
-    @* Lists out all the students in the database, and puts a checkbox next to them. Can also remove students *@
     @if (enrolledStudentModels != null && enrolledStudentModels.Count > 0)
     {
         <h4>Students Currently in Class:</h4>
