@@ -1,3 +1,6 @@
+@* page for registering a user *@
+@* made by Jackson Wilson *@
+
 ﻿@page "/register"
 @inject AuthService AuthService
 @inject NavigationManager NavigationManager
@@ -7,26 +10,32 @@
 
 <h3>Register</h3>
 
+@* Registration form using Blazor's EditForm component with data validation *@
 <EditForm Model="@registrationModel" OnValidSubmit="HandleRegister">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
+    @* UTD ID input *@
     <div>
         <label>UTD ID:</label>
         <InputNumber @bind-Value="registrationModel.UTD_ID" class="form-control" />
     </div>
+    @* Password input *@
     <div>
         <label>Password:</label>
         <InputText @bind-Value="registrationModel.Password" type="password" class="form-control" />
     </div>
+    @* First Name input *@
     <div>
         <label>First Name:</label>
         <InputText @bind-Value="registrationModel.FirstName" class="form-control" />
     </div>
+    @* Last Name input *@
     <div>
         <label>Last Name:</label>
         <InputText @bind-Value="registrationModel.LastName" class="form-control" />
     </div>
+    @* Role selection dropdown *@
     <div>
         <label>Role:</label>
         <select @bind="registrationModel.Role" class="form-control">
@@ -36,17 +45,22 @@
         </select>
     </div>
 
+    @* Submit button  *@
     <button type="submit" class="btn btn-primary mt-3">Register</button>
 </EditForm>
 
 @code {
+    // model to bind form input fields
     private RegistrationModel registrationModel = new();
 
+    // handles form submission when validation passes
     private async Task HandleRegister()
     {
+        // Call AuthService to register the user
         var result = await AuthService.RegisterUser(registrationModel);
         if (result)
         {
+            // Redirect to login page after successful registration
             NavigationManager.NavigateTo("/login");
         }
     }
