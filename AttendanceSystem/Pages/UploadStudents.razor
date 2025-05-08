@@ -1,6 +1,6 @@
 @* Upload students page. Here, professor can upload a .csv file*@
 @* containing lastname, firstnames, usernames, and student ID  *@
-@* -Nathan Kim*@
+@* Made by Nathan Kim *@
 
 
 @page "/upload-students"
@@ -47,17 +47,19 @@
     private string statusMessage = "";
     private bool isPreviewReady = false;
 
-
+    // Let user select a file to upload
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
         var file = e.File;
 
+        // Only allow user to upload .csv file
         if (file == null || !file.Name.EndsWith(".csv"))
         {
             statusMessage = "Invalid file. Please upload a CSV.";
             return;
         }
 
+        // Attempt to parse information from csv into our database
         try
         {
             await using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024);
@@ -101,6 +103,8 @@
         }
     }
 
+    // Confirmation of Upload button
+    // Protect against duplicate students. Students already in db are skipped
     private async Task ConfirmUpload()
     {
         try
