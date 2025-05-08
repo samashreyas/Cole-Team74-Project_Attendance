@@ -1,3 +1,7 @@
+@* ClassDetail Page after Student Clicks on Class from Student Dashboard *@
+@* Lists all information for the selected class and all attendance records for logged in student *@
+@* Made by Steven Maddela *@
+
 @page "/student/class/{Id:int}"
 @using System.Globalization
 @using Microsoft.EntityFrameworkCore
@@ -12,9 +16,11 @@
     {
         <h1 class="text-2xl font-bold mb-4">@CurrentClass.Name - Attendance Details</h1>
 
+// Student add attendance record section
         <div class="mb-4 border rounded-md shadow-sm">
             <div class="flex justify-between items-center p-4 border-b">
                 <h2 class="text-xl font-semibold">Attendance Record</h2>
+                //Show Add Attendance button only if within class time
                 @if (ShouldShowAddAttendanceButton())
                 {
                     <button type="button"
@@ -33,7 +39,7 @@
                 }
             </div>
 
-            <!-- Question prompt dialog -->
+//Question prompt if add attendance record button
             @if (IsQuestionPromptVisible)
             {
                 <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
@@ -61,6 +67,7 @@
                 </div>
             }
 
+//Attendance record table
             <table class="w-full border-collapse">
                 <thead>
                     <tr class="bg-gray-100">
@@ -94,6 +101,7 @@
             <div style="padding-top: 1rem;"></div>
         </div>
 
+//Class information and summary
         <div class="border rounded-md shadow-sm p-4">
             <h2 class="text-xl font-semibold mb-3 border-b pb-2">Class Information</h2>
             <div class="grid md:grid-cols-2 gap-4">
@@ -140,8 +148,9 @@
 </div>
 
 @code {
+// Route parameter for class ID
     [Parameter]
-    public int Id { get; set; }
+    public int Id { get; set; } 
 
     private ClassItem? CurrentClass { get; set; }
     private int PresentDays { get; set; }
@@ -149,18 +158,17 @@
     private double AttendancePercentage { get; set; }
     private string DebugMessage { get; set; } = "";
 
-    // Question handling properties
+    // Question handling variables
     private bool IsQuestionPromptVisible { get; set; } = false;
     private string DailyQuestion { get; set; } = "";
     private string StudentAnswer { get; set; } = "";
 
-
+// Load class and attendance data for student when the page initializes
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            // Get the student ID - replace with actual auth logic when implemented
-            var studentId = 2;
+            var studentId;
 
             // Get the class from the database
             var dbClass = await DbContext.Classes
@@ -170,6 +178,7 @@
 
             if (dbClass != null)
             {
+                // Fetch instructor details
                 var instructor = await DbContext.Users.FirstOrDefaultAsync(u => u.UserID == dbClass.InstructorID);
                 instructorName = instructor != null ? instructor.FirstName + " " + instructor.LastName : "Unknown";
 
@@ -213,7 +222,7 @@
         }
     }
 
-
+// Helper method to determine if the "Add Attendance" button should be visible
     private bool ShouldShowAddAttendanceButton()
     {
         if (CurrentClass == null) return false;
@@ -237,6 +246,7 @@
         return false;
     }
 
+// Helper method to check if current time is within 1 hour of scheduled class time
     private bool IsWithinOneHour(string classTime, string days, DateTime today)
     {
         var timePart = classTime.Replace(days, "").Trim();
@@ -248,7 +258,7 @@
         return false;
     }
 
-    // Show question prompt and fetch selected question
+// Helper method to show question prompt and fetch selected question
     private async Task ShowQuestionPrompt()
     {
         try
@@ -278,7 +288,7 @@
         StateHasChanged();
     }
 
-    // Cancel question prompt
+// Helper method to close the question modal without submitting
     private void CancelQuestionPrompt()
     {
         IsQuestionPromptVisible = false;
@@ -286,12 +296,12 @@
         StateHasChanged();
     }
 
-    // Submit answer and add attendance record
+// Helper method to submit answer and add attendance record
     private async Task SubmitAnswerAndAddAttendance()
     {
         try
         {
-            var studentId = 2; // Replace with actual student ID from auth
+            var studentId = 2; 
             var today = DateTime.Now.Date;
 
             // 1. Create question response entity
@@ -310,7 +320,7 @@
                 DbContext.QuestionResponses.Add(questionResponse);
             }
 
-            // 2. Create attendance record if it doesn't exist for today
+            // Create attendance record if it doesn't exist for today
             if (!CurrentClass.AttendanceRecords.Any(r => r.Date.Date == today))
             {
                 // Step 1: Get the student's IP from HttpContext
@@ -321,13 +331,13 @@
                     return;
                 }
 
-                // Step 2: Get instructor ID for this class
+                //  Get instructor ID for this class
                 var instructorId = await DbContext.Classes
                     .Where(c => c.ClassID == Id)
                     .Select(c => c.InstructorID)
                     .FirstOrDefaultAsync();
 
-                // Step 3: Get the instructor's most recent IP from ip_address_log
+                //  Get the instructor's most recent IP from ip_address_log
                 var instructorIp = await DbContext.IPAddressLogs
                     .Where(log => log.UserID == instructorId)
                     .OrderByDescending(log => log.Timestamp)
@@ -340,7 +350,7 @@
                     return;
                 }
 
-                // Step 4: Compare subnets (e.g., match first 3 octets)
+                //  Compare subnets (e.g., match first 3 octets)
                 bool IsSameSubnet(string ip1, string ip2)
                 {
                     var parts1 = ip1.Split('.');
@@ -357,7 +367,7 @@
                     return;
                 }
 
-                // Step 5: Proceed to create attendance record
+                // Proceed to create attendance record
                 var newRecord = new AttendanceSystem.Data.Models.AttendanceRecord
                     {
                         Date = today,
@@ -409,6 +419,8 @@
         StateHasChanged();
     }
 
+//Helper class to represent a class/course in the system
+
     public class ClassItem
     {
         public int? Id { get; set; }
@@ -430,6 +442,8 @@
             AttendanceRecords = attendanceRecords ?? new List<AttendanceRecord>();
         }
     }
+
+// Helper class to represent a single attendance entry for a class
 
     public class AttendanceRecord
     {
