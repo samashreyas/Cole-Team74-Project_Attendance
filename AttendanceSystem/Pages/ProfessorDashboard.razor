@@ -1,6 +1,6 @@
 @* Professor Dashboard Page *@
 @* Has Frontend for Listing all of the Logged In Professors' Classes *@
-@* Made by Steven Maddela *@
+@* Made by Steven Maddela, Jackson Wilson *@
 
 @page "/professor"
 @using Microsoft.EntityFrameworkCore
@@ -9,7 +9,7 @@
 @inject AttendanceDbContext DbContext
 @inject AuthenticationStateProvider AuthProvider
 
-//Button Styling
+@* Button Styling *@
 <style>
     .blue-button {
         background-color: #3b82f6;
@@ -29,14 +29,14 @@
 <div class="mb-4">
         <h2 class="font-semibold pb-1">Class Management</h2>
         <div class="space-x-2">
-//Button to route to assign students page, with professor ID passed as query parameter
+ @* Button to route to assign students page, with professor ID passed as query parameter *@
             <a href="/assign-students?professorId=@ProfessorID" class="blue-button" style="text-decoration: none;">Assign Students</a>
-//Button to route to upload students page
+ @* Button to route to upload students page *@
             <a href="/upload-students" class="blue-button" style="text-decoration: none;">Upload Students</a>
         </div>
     </div>
 
-//Main content area displaying the all of the current professor's classes 
+@* Main content area displaying the all of the current professor's classes *@
 <div class="max-w-6xl mx-auto p-6">
     <h1 class="text-3xl font-semibold text-gray-800 mb-6 text-center">My Classes</h1>
 
@@ -49,13 +49,13 @@
         <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             @foreach (var classItem in ProfessorClasses)
             {
-//Link to individual class page
+@* Link to individual class page *@
                 <a href="/professor/class/@classItem.ClassID"
                    class="block no-underline text-inherit focus:outline-none focus:ring-2 focus:ring-blue-300">
                     <div class="text-gray-800 border border-gray-300 rounded-xl bg-white p-5 hover:shadow-md transition-shadow duration-200">
                         <h2 class="text-lg font-semibold mb-2">@classItem.Name</h2>
                         <div class="text-sm space-y-1">
-//Class time and room info
+@* Class time and room info *@
                             <p><strong>Time:</strong> @classItem.Time</p>
                             <p><strong>Room:</strong> @classItem.Room</p>
                         </div>
