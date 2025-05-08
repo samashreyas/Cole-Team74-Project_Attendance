@@ -1,5 +1,12 @@
 ﻿@page "/login"
 
+@* 
+    This page handles user login for the attendance system. 
+    It allows users (students or professors) to enter their UTD ID and password. 
+    Upon successful authentication, it logs the user's IP address and redirects them to their respective dashboard based on role.
+    Made by Jackson Wilson
+*@
+
 @using Microsoft.EntityFrameworkCore
 @using AttendanceSystem.Services
 @using AttendanceSystem.Data.Models
@@ -10,40 +17,49 @@
 @inject AttendanceDbContext DbContext
 
 <h3>Login</h3>
-
+@* Login form using Blazor's EditForm component *@
 <EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
+    @* UTD ID input field *@
     <div>
         <label>UTD ID:</label>
         <InputNumber @bind-Value="loginModel.UTD_ID" />
     </div>
+    @* Password input field *@
     <div>
         <label>Password:</label>
         <InputText @bind-Value="loginModel.Password" type="password" />
     </div>
 
+    @* Submit button *@
     <button type="submit">Login</button>
 </EditForm>
 
 @code {
+    // Model to bind form inputs
     private AttendanceSystem.Models.LoginModel loginModel = new();
 
+    // Called when the form is successfully submitted and validated
     private async Task HandleLogin()
     {
+        // Try logging in the user via AuthService
         var result = await AuthService.LoginUser(loginModel);
         if (result)
         {
+            // Retrieve the full user object from the database
             var dbUser = await DbContext.Users.FirstOrDefaultAsync(u => u.UTD_ID == loginModel.UTD_ID);
 if (dbUser != null)
 {
     // Log IP Address
     await IPLoggerService.LogUserIPAsync(dbUser.UserID);
 }
+            // Get the current user's authentication state (claims-based)
             var authState = await AuthStateProvider.GetAuthenticationStateAsync();
             var user = authState.User;
 
+            // Redirect based on user role
             if (user.IsInRole("Professor"))
                 NavigationManager.NavigateTo("/professor");
             else if (user.IsInRole("Student"))
