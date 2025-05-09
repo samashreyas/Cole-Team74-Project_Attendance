@@ -7,7 +7,8 @@
 @using AttendanceSystem.Data.Models
 @inject AttendanceDbContext DbContext
 
-//Button, Table, and Font Styling
+@* Button, Table, and Font Styling *@
+
 <style>
     .blue-button {
         background-color: #3b82f6;
@@ -72,7 +73,7 @@
     {
 
         <div class="bg-white border rounded-lg p-6 mb-6 space-y-4">
-            //Question Selection Section
+@* Question Selection Section *@
 
             <div class="mb-4">
                 <h2 class="text-xl font-semibold mb-3">Quiz Question Selection</h2>
@@ -107,7 +108,8 @@
                 </div>
             </div>
 
-            //Add New Question Section
+@* Add New Question Section *@
+
             <div class="mb-6">
                 <div class="content-indented">
                     @if (!ShowAddQuestionForm)
@@ -157,7 +159,7 @@
                 </div>
             </div>
 
-            //Attendance Summary Section
+@* Attendance Summary Section *@
 
             <div class="mb-3">
                 <h2 class="text-xl font-semibold mb-3">Attendance Summary</h2>
@@ -168,8 +170,8 @@
                 </div>
             </div>
 
-            //Professor Edit Attendance Section
-            //Set all attendance for all students for the day as present/absent
+@* Professor Edit Attendance Section *@
+            @* Set all attendance for all students for the day as present/absent *@
 
             <div class="mb-4">
                 <h2 class="text-xl font-semibold mb-3">Record Attendance</h2>
@@ -183,7 +185,7 @@
                 </div>
             </div>
 
-            //Allows Professor to set attendance for any student for any day as present/absent
+            @* Allows Professor to set attendance for any student for any day as present/absent *@
 
             <div>
                 <h2 class="text-xl font-semibold mb-3">Attendance Details</h2>
