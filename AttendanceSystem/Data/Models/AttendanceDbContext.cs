@@ -1,3 +1,8 @@
+// Database Context Class 
+// Connects to DB and Creates Classes to Load Data
+// Made by Steven Maddela & Nathan Kim
+
+
 using Microsoft.EntityFrameworkCore;
 
 using System;
