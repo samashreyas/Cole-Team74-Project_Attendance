@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+
 using System;
 using System.Collections.Generic;
 
@@ -25,25 +26,25 @@ namespace AttendanceSystem.Data.Models
         {
 
             // Configure QuestionResponse entity - Map to question_responses table
-modelBuilder.Entity<QuestionResponse>()
-    .ToTable("question_responses")
-    .HasKey(qr => new { qr.QuestionText, qr.StudentID, qr.ClassID });  // Composite key
+            modelBuilder.Entity<QuestionResponse>()
+                .ToTable("question_responses")
+                .HasKey(qr => new { qr.QuestionText, qr.StudentID, qr.ClassID });  // Composite key
 
-modelBuilder.Entity<QuestionResponse>()
-    .Property(qr => qr.QuestionText)
-    .HasColumnName("question_text");
-    
-modelBuilder.Entity<QuestionResponse>()
-    .Property(qr => qr.StudentID)
-    .HasColumnName("student_id");
-    
-modelBuilder.Entity<QuestionResponse>()
-    .Property(qr => qr.ClassID)
-    .HasColumnName("class_id");
-    
-modelBuilder.Entity<QuestionResponse>()
-    .Property(qr => qr.Answer)
-    .HasColumnName("answer");
+            modelBuilder.Entity<QuestionResponse>()
+                .Property(qr => qr.QuestionText)
+                .HasColumnName("question_text");
+
+            modelBuilder.Entity<QuestionResponse>()
+                .Property(qr => qr.StudentID)
+                .HasColumnName("student_id");
+
+            modelBuilder.Entity<QuestionResponse>()
+                .Property(qr => qr.ClassID)
+                .HasColumnName("class_id");
+
+            modelBuilder.Entity<QuestionResponse>()
+                .Property(qr => qr.Answer)
+                .HasColumnName("answer");
 
 
             // Student configuration
@@ -68,28 +69,28 @@ modelBuilder.Entity<QuestionResponse>()
             });
 
             modelBuilder.Entity<IPAddressLog>(entity =>
-{
-    entity.ToTable("ip_address_log");
+            {
+                entity.ToTable("ip_address_log");
 
-    entity.HasKey(e => e.ID);
-    entity.Property(e => e.ID).HasColumnName("id");
-    entity.Property(e => e.UserID).HasColumnName("user_id");
-    entity.Property(e => e.IPAddress).HasColumnName("ip_address");
-    entity.Property(e => e.Timestamp).HasColumnName("timestamp");
+                entity.HasKey(e => e.ID);
+                entity.Property(e => e.ID).HasColumnName("id");
+                entity.Property(e => e.UserID).HasColumnName("user_id");
+                entity.Property(e => e.IPAddress).HasColumnName("ip_address");
+                entity.Property(e => e.Timestamp).HasColumnName("timestamp");
 
-    entity.HasOne(e => e.User)
-          .WithMany()
-          .HasForeignKey(e => e.UserID);
-});
+                entity.HasOne(e => e.User)
+                      .WithMany()
+                      .HasForeignKey(e => e.UserID);
+            });
 
             // StudentCourse configuration
             modelBuilder.Entity<StudentCourse>(entity =>
             {
                 entity.HasKey(sc => new { sc.StudentID, sc.ClassID });
-                
+
                 entity.Property(sc => sc.StudentID)
                     .HasColumnName("student_id");
-                
+
                 entity.Property(sc => sc.ClassID)
                     .HasColumnName("course_id");  // Map to course_id column
 
@@ -170,15 +171,15 @@ modelBuilder.Entity<QuestionResponse>()
                 .Property(q => q.Selected)
                 .HasColumnName("selected");
 
-            
-    modelBuilder.Entity<Question>()
-    .Property(q => q.AnswerChoices)
-    .HasColumnName("answer_choices");
 
-                
-    modelBuilder.Entity<Question>()
-    .Property(q => q.CorrectAnswer)
-    .HasColumnName("correct_answer");
+            modelBuilder.Entity<Question>()
+                .Property(q => q.AnswerChoices)
+                .HasColumnName("answer_choices");
+
+
+            modelBuilder.Entity<Question>()
+                .Property(q => q.CorrectAnswer)
+                .HasColumnName("correct_answer");
 
 
             modelBuilder.Entity<Question>()
@@ -206,12 +207,12 @@ modelBuilder.Entity<QuestionResponse>()
 
 
     public class QuestionResponse
-{
-    public string QuestionText { get; set; }
-    public int StudentID { get; set; }
-    public int ClassID { get; set; }
-    public string Answer { get; set; }
-}
+    {
+        public string QuestionText { get; set; }
+        public int StudentID { get; set; }
+        public int ClassID { get; set; }
+        public string Answer { get; set; }
+    }
 
     public class Instructor
     {
@@ -240,7 +241,7 @@ modelBuilder.Entity<QuestionResponse>()
         public long? StudentID { get; set; }
     }
 
-     public class User
+    public class User
     {
         public int UserID { get; set; }
         public string FirstName { get; set; } = "";
@@ -251,39 +252,37 @@ modelBuilder.Entity<QuestionResponse>()
     }
 
     public class IPAddressLog
-{
-    public int ID { get; set; }
-    public int UserID { get; set; }
-    public string IPAddress { get; set; }
-    public DateTime Timestamp { get; set; }
-    public User User { get; set; }
-}
+    {
+        public int ID { get; set; }
+        public int UserID { get; set; }
+        public string IPAddress { get; set; }
+        public DateTime Timestamp { get; set; }
+        public User User { get; set; }
+    }
 
     public class Student
     {
         public long? StudentID { get; set; }
         public string? Name { get; set; }
-
-    public string? LastName { get; set; }
-    public string? FirstName { get; set; }
-    public string? Username { get; set; }
+        public string? LastName { get; set; }
+        public string? FirstName { get; set; }
+        public string? Username { get; set; }
         public ICollection<StudentCourse> StudentCourses { get; set; }
-
     }
 
-    
+
 
     public class Question
-{
-    public string QuestionText { get; set; } = "";
-    public int ClassID { get; set; }
-    public bool Selected { get; set; }
-    
-    // New properties for multiple choice
-    public string? AnswerChoices { get; set; }
-    public string? CorrectAnswer { get; set; }
-    
-    // Navigation properties
-    public Class Class { get; set; }
-}
+    {
+        public string QuestionText { get; set; } = "";
+        public int ClassID { get; set; }
+        public bool Selected { get; set; }
+
+        // New properties for multiple choice
+        public string? AnswerChoices { get; set; }
+        public string? CorrectAnswer { get; set; }
+
+        // Navigation properties
+        public Class Class { get; set; }
+    }
 }

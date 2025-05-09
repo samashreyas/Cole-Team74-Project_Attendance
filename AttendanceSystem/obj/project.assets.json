@@ -4520,24 +4520,32 @@
     ]
   },
   "packageFolders": {
-    "/Users/stevenmaddela/.nuget/packages/": {}
+    "C:\\Users\\samas\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/AttendanceSystem.csproj",
+      "projectUniqueName": "C:\\Users\\samas\\source\\repos\\AttendanceSystem\\AttendanceSystem\\AttendanceSystem.csproj",
       "projectName": "AttendanceSystem",
-      "projectPath": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/AttendanceSystem.csproj",
-      "packagesPath": "/Users/stevenmaddela/.nuget/packages/",
-      "outputPath": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/",
+      "projectPath": "C:\\Users\\samas\\source\\repos\\AttendanceSystem\\AttendanceSystem\\AttendanceSystem.csproj",
+      "packagesPath": "C:\\Users\\samas\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\samas\\source\\repos\\AttendanceSystem\\AttendanceSystem\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "/Users/stevenmaddela/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\samas\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -4630,7 +4638,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.202/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

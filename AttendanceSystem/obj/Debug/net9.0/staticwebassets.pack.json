@@ -1,79 +1,79 @@
 {
   "Files": [
     {
-      "Id": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/obj/Debug/net9.0/scopedcss/projectbundle/AttendanceSystem.bundle.scp.css",
-      "PackagePath": "staticwebassets/AttendanceSystem.yzxvpipnch.bundle.scp.css"
+      "Id": "C:\\Users\\samas\\source\\repos\\AttendanceSystem\\AttendanceSystem\\obj\\Debug\\net9.0\\scopedcss\\projectbundle\\AttendanceSystem.bundle.scp.css",
+      "PackagePath": "staticwebassets\\AttendanceSystem.o16czvxutv.bundle.scp.css"
     },
     {
-      "Id": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/wwwroot/css/bootstrap/bootstrap.min.css",
-      "PackagePath": "staticwebassets/css/bootstrap/bootstrap.min.css"
+      "Id": "C:\\Users\\samas\\source\\repos\\AttendanceSystem\\AttendanceSystem\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css"
     },
     {
-      "Id": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/wwwroot/css/bootstrap/bootstrap.min.css.map",
-      "PackagePath": "staticwebassets/css/bootstrap/bootstrap.min.css.map"
+      "Id": "C:\\Users\\samas\\source\\repos\\AttendanceSystem\\AttendanceSystem\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css.map"
     },
     {
-      "Id": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/wwwroot/css/open-iconic/FONT-LICENSE",
-      "PackagePath": "staticwebassets/css/open-iconic"
+      "Id": "C:\\Users\\samas\\source\\repos\\AttendanceSystem\\AttendanceSystem\\wwwroot\\css\\open-iconic\\FONT-LICENSE",
+      "PackagePath": "staticwebassets\\css\\open-iconic"
     },
     {
-      "Id": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/wwwroot/css/open-iconic/ICON-LICENSE",
-      "PackagePath": "staticwebassets/css/open-iconic"
+      "Id": "C:\\Users\\samas\\source\\repos\\AttendanceSystem\\AttendanceSystem\\wwwroot\\css\\open-iconic\\ICON-LICENSE",
+      "PackagePath": "staticwebassets\\css\\open-iconic"
     },
     {
-      "Id": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/wwwroot/css/open-iconic/README.md",
-      "PackagePath": "staticwebassets/css/open-iconic/README.md"
+      "Id": "C:\\Users\\samas\\source\\repos\\AttendanceSystem\\AttendanceSystem\\wwwroot\\css\\open-iconic\\README.md",
+      "PackagePath": "staticwebassets\\css\\open-iconic\\README.md"
     },
     {
-      "Id": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/wwwroot/css/open-iconic/font/css/open-iconic-bootstrap.min.css",
-      "PackagePath": "staticwebassets/css/open-iconic/font/css/open-iconic-bootstrap.min.css"
+      "Id": "C:\\Users\\samas\\source\\repos\\AttendanceSystem\\AttendanceSystem\\wwwroot\\css\\open-iconic\\font\\css\\open-iconic-bootstrap.min.css",
+      "PackagePath": "staticwebassets\\css\\open-iconic\\font\\css\\open-iconic-bootstrap.min.css"
     },
     {
-      "Id": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/wwwroot/css/open-iconic/font/fonts/open-iconic.eot",
-      "PackagePath": "staticwebassets/css/open-iconic/font/fonts/open-iconic.eot"
+      "Id": "C:\\Users\\samas\\source\\repos\\AttendanceSystem\\AttendanceSystem\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.eot",
+      "PackagePath": "staticwebassets\\css\\open-iconic\\font\\fonts\\open-iconic.eot"
     },
     {
-      "Id": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/wwwroot/css/open-iconic/font/fonts/open-iconic.otf",
-      "PackagePath": "staticwebassets/css/open-iconic/font/fonts/open-iconic.otf"
+      "Id": "C:\\Users\\samas\\source\\repos\\AttendanceSystem\\AttendanceSystem\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.otf",
+      "PackagePath": "staticwebassets\\css\\open-iconic\\font\\fonts\\open-iconic.otf"
     },
     {
-      "Id": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/wwwroot/css/open-iconic/font/fonts/open-iconic.svg",
-      "PackagePath": "staticwebassets/css/open-iconic/font/fonts/open-iconic.svg"
+      "Id": "C:\\Users\\samas\\source\\repos\\AttendanceSystem\\AttendanceSystem\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.svg",
+      "PackagePath": "staticwebassets\\css\\open-iconic\\font\\fonts\\open-iconic.svg"
     },
     {
-      "Id": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/wwwroot/css/open-iconic/font/fonts/open-iconic.ttf",
-      "PackagePath": "staticwebassets/css/open-iconic/font/fonts/open-iconic.ttf"
+      "Id": "C:\\Users\\samas\\source\\repos\\AttendanceSystem\\AttendanceSystem\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.ttf",
+      "PackagePath": "staticwebassets\\css\\open-iconic\\font\\fonts\\open-iconic.ttf"
     },
     {
-      "Id": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/wwwroot/css/open-iconic/font/fonts/open-iconic.woff",
-      "PackagePath": "staticwebassets/css/open-iconic/font/fonts/open-iconic.woff"
+      "Id": "C:\\Users\\samas\\source\\repos\\AttendanceSystem\\AttendanceSystem\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.woff",
+      "PackagePath": "staticwebassets\\css\\open-iconic\\font\\fonts\\open-iconic.woff"
     },
     {
-      "Id": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/wwwroot/css/site.css",
-      "PackagePath": "staticwebassets/css/site.css"
+      "Id": "C:\\Users\\samas\\source\\repos\\AttendanceSystem\\AttendanceSystem\\wwwroot\\css\\site.css",
+      "PackagePath": "staticwebassets\\css\\site.css"
     },
     {
-      "Id": "/Users/stevenmaddela/AttendanceGIT/Cole-Team74-Project_Attendance/AttendanceSystem/wwwroot/favicon.png",
-      "PackagePath": "staticwebassets/favicon.png"
+      "Id": "C:\\Users\\samas\\source\\repos\\AttendanceSystem\\AttendanceSystem\\wwwroot\\favicon.png",
+      "PackagePath": "staticwebassets\\favicon.png"
     },
     {
-      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.AttendanceSystem.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.AttendanceSystem.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
     },
     {
-      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.AttendanceSystem.Microsoft.AspNetCore.StaticWebAssets.props",
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.AttendanceSystem.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },
     {
-      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.build.AttendanceSystem.props",
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.build.AttendanceSystem.props",
       "PackagePath": "build\\AttendanceSystem.props"
     },
     {
-      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.buildMultiTargeting.AttendanceSystem.props",
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.buildMultiTargeting.AttendanceSystem.props",
       "PackagePath": "buildMultiTargeting\\AttendanceSystem.props"
     },
     {
-      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.buildTransitive.AttendanceSystem.props",
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.buildTransitive.AttendanceSystem.props",
       "PackagePath": "buildTransitive\\AttendanceSystem.props"
     }
   ],

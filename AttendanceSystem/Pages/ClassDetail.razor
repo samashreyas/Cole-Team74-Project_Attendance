@@ -1,6 +1,6 @@
 @* ClassDetail Page after Student Clicks on Class from Student Dashboard *@
 @* Lists all information for the selected class and all attendance records for logged in student *@
-@* Made by Steven Maddela *@
+@* Made by Steven Maddela, Shreyas Sama *@
 
 @page "/student/class/{Id:int}"
 @using System.Globalization
@@ -39,7 +39,7 @@
                 }
             </div>
 
-//Question prompt if add attendance record button
+            @* Question prompt if add attendance record button *@
             @if (IsQuestionPromptVisible)
             {
                 <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
@@ -67,7 +67,7 @@
                 </div>
             }
 
-//Attendance record table
+            @* Attendance record table *@
             <table class="w-full border-collapse">
                 <thead>
                     <tr class="bg-gray-100">
@@ -168,7 +168,7 @@
     {
         try
         {
-            var studentId;
+            var studentId = 2;
 
             // Get the class from the database
             var dbClass = await DbContext.Classes

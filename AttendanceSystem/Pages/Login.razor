@@ -4,7 +4,7 @@
     This page handles user login for the attendance system. 
     It allows users (students or professors) to enter their UTD ID and password. 
     Upon successful authentication, it logs the user's IP address and redirects them to their respective dashboard based on role.
-    Made by Jackson Wilson
+    Made by Jackson Wilson, Shreyas Sama
 *@
 
 @using Microsoft.EntityFrameworkCore
@@ -50,11 +50,11 @@
         {
             // Retrieve the full user object from the database
             var dbUser = await DbContext.Users.FirstOrDefaultAsync(u => u.UTD_ID == loginModel.UTD_ID);
-if (dbUser != null)
-{
-    // Log IP Address
-    await IPLoggerService.LogUserIPAsync(dbUser.UserID);
-}
+            if (dbUser != null)
+            {
+                // Log IP Address
+                await IPLoggerService.LogUserIPAsync(dbUser.UserID);
+            }
             // Get the current user's authentication state (claims-based)
             var authState = await AuthStateProvider.GetAuthenticationStateAsync();
             var user = authState.User;
@@ -68,4 +68,4 @@ if (dbUser != null)
                 NavigationManager.NavigateTo("/");
         }
     }
-}    
+}

@@ -89,12 +89,13 @@ else
         classes = await DbService.GetAllClassesAsync(professorId.Value);
         classList = classes;
         studentList = await DbService.GetAllStudentsAsync();
-        
+
         // Initialize available students view models
-        availableStudentModels = studentList.Select(s => new StudentViewModel { 
-            Student = s, 
-            IsSelected = false 
-        }).ToList();
+        availableStudentModels = studentList.Select(s => new StudentViewModel
+            {
+                Student = s,
+                IsSelected = false
+            }).ToList();
     }
 
 
@@ -118,13 +119,13 @@ else
         }
 
         statusMessage = $"✅ Assigned {addedCount} students to class. (Duplicates skipped)";
-        
+
         // Reset selections
         foreach (var studentVM in availableStudentModels)
         {
             studentVM.IsSelected = false;
         }
-        
+
         // Refresh enrolled students
         if (selectedClassId != null)
         {
@@ -143,16 +144,17 @@ else
             await RefreshEnrolledStudents();
         }
     }
-    
+
     private async Task RefreshEnrolledStudents()
     {
         if (selectedClassId.HasValue)
         {
             var students = await DbService.GetStudentsInClassAsync(selectedClassId.Value);
-            enrolledStudentModels = students.Select(s => new StudentViewModel {
-                Student = s,
-                IsSelected = false
-            }).ToList();
+            enrolledStudentModels = students.Select(s => new StudentViewModel
+                {
+                    Student = s,
+                    IsSelected = false
+                }).ToList();
 
             // Update the total_students count in the Classes table
             await DbService.UpdateClassTotalStudentsAsync(selectedClassId.Value, enrolledStudentModels.Count);

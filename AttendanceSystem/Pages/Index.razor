@@ -1,13 +1,21 @@
 ﻿@page "/"
+
+@* This component is rendered at the root URL of the application *@
+@* It checks if the user is authenticated; if not, it redirects to the login page *@
+
 @inject NavigationManager Navigation
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 @code {
     protected override async Task OnInitializedAsync()
     {
+        // Retrieve the current authentication state
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        // Check if the user is authenticated
         var isAuthenticated = authState.User.Identity.IsAuthenticated;
 
+        // If not authenticated, redirect to the login page
         if (!isAuthenticated)
         {
             Navigation.NavigateTo("/login");

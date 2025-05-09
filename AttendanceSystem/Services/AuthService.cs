@@ -47,7 +47,7 @@ namespace AttendanceSystem.Services
                 cmd.Parameters.Add("@utd_id", MySqlDbType.Int32).Value = model.UTD_ID;
                 cmd.Parameters.Add("@password", MySqlDbType.VarChar).Value = model.Password;
                 cmd.Parameters.Add("@role", MySqlDbType.Int32).Value = model.Role;
-                
+
                 // Execute and check success
                 return await cmd.ExecuteNonQueryAsync() > 0;
             }

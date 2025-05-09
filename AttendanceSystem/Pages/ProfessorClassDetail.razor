@@ -17,9 +17,9 @@
         transition: background-color 0.2s;
     }
 
-    .blue-button:hover {
-        background-color: #2563eb;
-    }
+        .blue-button:hover {
+            background-color: #2563eb;
+        }
 
     table {
         border-collapse: collapse;
@@ -46,9 +46,9 @@
         background-color: #f9f9f9;
     }
 
-    tbody tr:nth-child(even) {
-        background-color: #f9f9f9;
-    }
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
 
     .content-indented {
         margin-left: 1.25rem;
@@ -60,22 +60,20 @@
         border: 1px solid #d1d5db;
     }
 
-    
 </style>
 
 <div class="container mx-auto p-4">
     <h1 class="text-2xl font-bold mb-4">@CurrentClass?.Name - Manage Attendance</h1>
     <div class="mb-4">
-
-</div>
+    </div>
 
 
     @if (CurrentClass != null)
     {
-        
+
         <div class="bg-white border rounded-lg p-6 mb-6 space-y-4">
-//Question Selection Section
-            
+            //Question Selection Section
+
             <div class="mb-4">
                 <h2 class="text-xl font-semibold mb-3">Quiz Question Selection</h2>
                 <div class="content-indented">
@@ -91,14 +89,14 @@
                             Select Question
                         </button>
                     </div>
-                    
+
                     @if (!string.IsNullOrEmpty(selectedQuestionMessage))
                     {
                         <div class="mt-2 @(isSuccess ? "text-green-600" : "text-red-600")">
                             @selectedQuestionMessage
                         </div>
                     }
-                    
+
                     @if (SelectedQuestion != null)
                     {
                         <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded">
@@ -109,7 +107,7 @@
                 </div>
             </div>
 
-//Add New Question Section
+            //Add New Question Section
             <div class="mb-6">
                 <div class="content-indented">
                     @if (!ShowAddQuestionForm)
@@ -159,7 +157,7 @@
                 </div>
             </div>
 
-//Attendance Summary Section
+            //Attendance Summary Section
 
             <div class="mb-3">
                 <h2 class="text-xl font-semibold mb-3">Attendance Summary</h2>
@@ -170,8 +168,8 @@
                 </div>
             </div>
 
-//Professor Edit Attendance Section
-//Set all attendance for all students for the day as present/absent
+            //Professor Edit Attendance Section
+            //Set all attendance for all students for the day as present/absent
 
             <div class="mb-4">
                 <h2 class="text-xl font-semibold mb-3">Record Attendance</h2>
@@ -185,7 +183,7 @@
                 </div>
             </div>
 
-//Allows Professor to set attendance for any student for any day as present/absent
+            //Allows Professor to set attendance for any student for any day as present/absent
 
             <div>
                 <h2 class="text-xl font-semibold mb-3">Attendance Details</h2>
@@ -254,10 +252,10 @@
 </div>
 
 @code {
-// Route parameter for Class ID
+    // Route parameter for Class ID
     [Parameter]
     public int Id { get; set; }
-// Class-level state variables   
+    // Class-level state variables
     private ClassItem? CurrentClass { get; set; }
     private HashSet<DateTime> DistinctAttendanceDates { get; set; } = new();
     private List<QuestionItem> ClassQuestions { get; set; } = new();
@@ -266,7 +264,7 @@
     private string selectedQuestionMessage = "";
     private bool isSuccess = false;
 
-// Add Question Form State
+    // Add Question Form State
     private bool ShowAddQuestionForm { get; set; } = false;
     private string NewQuestionText { get; set; } = "";
     private string NewAnswer1 { get; set; } = "";
@@ -278,7 +276,7 @@
     private bool AddQuestionSuccess { get; set; } = false;
 
 
-//On initialized, Load current class info, enrolled students, attendance records, and quiz questions from database
+    //On initialized, Load current class info, enrolled students, attendance records, and quiz questions from database
     protected override async Task OnInitializedAsync()
     {
         var dbClass = await DbContext.Classes
@@ -300,44 +298,44 @@
                 .ToListAsync();
 
             var students = enrolledStudents.Select(s => new StudentItem
-            {
-                Name = s.FirstName + " " + s.LastName,
-                StudentID = s.StudentID,
-                AttendanceRecords = classAttendance
-                    .Where(ar => ar.StudentID == s.StudentID)
-                    .Select(ar => new AttendanceRecord
-                    {
-                        Date = ar.Date,
-                        Status = ar.Status,
-                        ClassID = ar.ClassID,
-                        StudentID = ar.StudentID
-                    }).ToList()
-            }).ToList();
+                {
+                    Name = s.FirstName + " " + s.LastName,
+                    StudentID = s.StudentID,
+                    AttendanceRecords = classAttendance
+                        .Where(ar => ar.StudentID == s.StudentID)
+                        .Select(ar => new AttendanceRecord
+                        {
+                            Date = ar.Date,
+                            Status = ar.Status,
+                            ClassID = ar.ClassID,
+                            StudentID = ar.StudentID
+                        }).ToList()
+                }).ToList();
 
             CurrentClass = new ClassItem
-            {
-                ClassID = dbClass.ClassID,
-                Name = dbClass.Name,
-                Students = students
-            };
+                {
+                    ClassID = dbClass.ClassID,
+                    Name = dbClass.Name,
+                    Students = students
+                };
             DistinctAttendanceDates = classAttendance.Select(ar => ar.Date.Date).ToHashSet();
 
             await LoadQuestions();
         }
     }
 
-// Helper method to load questions for the current class from the database
+    // Helper method to load questions for the current class from the database
     private async Task LoadQuestions()
     {
         // Get questions for this class from the database
         var questions = await DbContext.Questions
             .Where(q => q.ClassID == Id)
             .Select(q => new QuestionItem
-            {
-                QuestionText = q.QuestionText,
-                ClassID = q.ClassID,
-                Selected = q.Selected
-            })
+                {
+                    QuestionText = q.QuestionText,
+                    ClassID = q.ClassID,
+                    Selected = q.Selected
+                })
             .ToListAsync();
 
         ClassQuestions = questions;
@@ -346,7 +344,7 @@
         SelectedQuestion = questions.FirstOrDefault(q => q.Selected);
     }
 
-// Helper method to handle selection of a question from the question bank as the "current" one for the day
+    // Helper method to handle selection of a question from the question bank as the "current" one for the day
     private async Task SelectQuestion()
     {
         if (string.IsNullOrEmpty(selectedQuestionText))
@@ -383,7 +381,7 @@
         }
     }
 
-// Helper method to add a new question to the class' question bank
+    // Helper method to add a new question to the class' question bank
     private async Task AddQuestion()
     {
         AddQuestionMessage = "";
@@ -406,13 +404,13 @@
         var choicesJson = System.Text.Json.JsonSerializer.Serialize(choices);
 
         var newQuestion = new Question
-        {
-            QuestionText = NewQuestionText,
-            ClassID = Id,
-            Selected = false,
-            AnswerChoices = choicesJson,
-            CorrectAnswer = NewCorrectAnswer.ToUpper()
-        };
+            {
+                QuestionText = NewQuestionText,
+                ClassID = Id,
+                Selected = false,
+                AnswerChoices = choicesJson,
+                CorrectAnswer = NewCorrectAnswer.ToUpper()
+            };
 
         try
         {
@@ -443,7 +441,7 @@
         }
     }
 
- // Helper method to cancel the "Add Question" form and clear inputs
+    // Helper method to cancel the "Add Question" form and clear inputs
     private void CancelAddQuestion()
     {
         ShowAddQuestionForm = false;
@@ -456,7 +454,7 @@
         NewCorrectAnswer = "";
     }
 
-// Helper method to add an attendance status for a given student and date
+    // Helper method to add an attendance status for a given student and date
     private void UpdateAttendanceStatus(StudentItem student, DateTime date, string? newStatus)
     {
         if (string.IsNullOrEmpty(newStatus)) return;
@@ -471,17 +469,17 @@
         {
             // Add new record if not present
             student.AttendanceRecords.Add(new AttendanceRecord
-            {
-                Date = date,
-                Status = newStatus,
-                ClassID = Id,
-                StudentID = student.StudentID ?? 0
-            });
+                {
+                    Date = date,
+                    Status = newStatus,
+                    ClassID = Id,
+                    StudentID = student.StudentID ?? 0
+                });
             DistinctAttendanceDates.Add(date.Date);
         }
     }
 
-// Helper method to mark all students as present for today
+    // Helper method to mark all students as present for today
     private void AddTodayAttendanceForAll()
     {
         foreach (var student in CurrentClass!.Students)
@@ -490,7 +488,7 @@
         }
     }
 
-// Helper method to mark all students as absent for today
+    // Helper method to mark all students as absent for today
     private void RemoveTodayAttendanceForAll()
     {
         foreach (var student in CurrentClass!.Students)
@@ -499,7 +497,7 @@
         }
     }
 
-// Saves attendance records to the database
+    // Saves attendance records to the database
     private async Task SaveAttendanceChanges()
     {
         if (CurrentClass == null) return;
@@ -523,12 +521,12 @@
                 {
                     // Insert new attendance record
                     DbContext.AttendanceRecords.Add(new AttendanceRecord
-                    {
-                        ClassID = record.ClassID,
-                        StudentID = record.StudentID,
-                        Date = record.Date.Date,
-                        Status = record.Status
-                    });
+                        {
+                            ClassID = record.ClassID,
+                            StudentID = record.StudentID,
+                            Date = record.Date.Date,
+                            Status = record.Status
+                        });
                 }
             }
         }
@@ -536,7 +534,7 @@
         await DbContext.SaveChangesAsync();
     }
 
-// Helper class representing current and its students
+    // Helper class representing current and its students
     private class ClassItem
     {
         public int ClassID { get; set; }
@@ -544,7 +542,7 @@
         public List<StudentItem> Students { get; set; } = new();
     }
 
-// Helper class representing a student and their attendance records
+    // Helper class representing a student and their attendance records
     private class StudentItem
     {
         public long? StudentID { get; set; }
@@ -552,7 +550,7 @@
         public List<AttendanceRecord> AttendanceRecords { get; set; } = new();
     }
 
-// Helper class representing a question for the class
+    // Helper class representing a question for the class
     private class QuestionItem
     {
         public string QuestionText { get; set; } = "";

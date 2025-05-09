@@ -19,22 +19,22 @@
         transition: background-color 0.2s;
     }
 
-    .blue-button:hover {
-        background-color: #2563eb;
-    }
+        .blue-button:hover {
+            background-color: #2563eb;
+        }
 </style>
 
 <PageTitle>My Classes (Professor)</PageTitle>
 
 <div class="mb-4">
-        <h2 class="font-semibold pb-1">Class Management</h2>
-        <div class="space-x-2">
- @* Button to route to assign students page, with professor ID passed as query parameter *@
-            <a href="/assign-students?professorId=@ProfessorID" class="blue-button" style="text-decoration: none;">Assign Students</a>
- @* Button to route to upload students page *@
-            <a href="/upload-students" class="blue-button" style="text-decoration: none;">Upload Students</a>
-        </div>
+    <h2 class="font-semibold pb-1">Class Management</h2>
+    <div class="space-x-2">
+        @* Button to route to assign students page, with professor ID passed as query parameter *@
+        <a href="/assign-students?professorId=@ProfessorID" class="blue-button" style="text-decoration: none;">Assign Students</a>
+        @* Button to route to upload students page *@
+        <a href="/upload-students" class="blue-button" style="text-decoration: none;">Upload Students</a>
     </div>
+</div>
 
 @* Main content area displaying the all of the current professor's classes *@
 <div class="max-w-6xl mx-auto p-6">
@@ -49,13 +49,13 @@
         <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             @foreach (var classItem in ProfessorClasses)
             {
-@* Link to individual class page *@
+                @* Link to individual class page *@
                 <a href="/professor/class/@classItem.ClassID"
                    class="block no-underline text-inherit focus:outline-none focus:ring-2 focus:ring-blue-300">
                     <div class="text-gray-800 border border-gray-300 rounded-xl bg-white p-5 hover:shadow-md transition-shadow duration-200">
                         <h2 class="text-lg font-semibold mb-2">@classItem.Name</h2>
                         <div class="text-sm space-y-1">
-@* Class time and room info *@
+                            @* Class time and room info *@
                             <p><strong>Time:</strong> @classItem.Time</p>
                             <p><strong>Room:</strong> @classItem.Room</p>
                         </div>
@@ -67,9 +67,9 @@
 </div>
 
 @code {
-// List to hold the professor's classes
+    // List to hold the professor's classes
     private List<Class> ProfessorClasses = new();
-// Stores the current professor's ID to send to assign students page
+    // Stores the current professor's ID to send to assign students page
     private int ProfessorID;
 
     protected override async Task OnInitializedAsync()
@@ -84,14 +84,14 @@
             return;
         }
 
-// Try to get the professor's ID from the logged in user
+        // Try to get the professor's ID from the logged in user
         var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier);
         if (!int.TryParse(userIdClaim?.Value, out int professorId))
         {
             Console.WriteLine("Failed to parse professor ID.");
             return;
         }
-// Save the professor ID and load classes taught by this professor
+        // Save the professor ID and load classes taught by this professor
         Console.WriteLine($"Loading classes for ProfessorID = {professorId}");
         ProfessorID = professorId;
         // Query the database for all classes taught by this professor

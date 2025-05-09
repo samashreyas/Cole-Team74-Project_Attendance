@@ -32,6 +32,8 @@ builder.Services.AddScoped<AuthService>();
 
 builder.Services.AddAuthorizationCore();
 builder.Services.AddSingleton<WeatherForecastService>();
+
+// Services for IP access and logging
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IPLoggerService>();
 var app = builder.Build();

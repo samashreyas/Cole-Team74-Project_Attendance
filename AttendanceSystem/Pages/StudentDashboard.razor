@@ -1,19 +1,27 @@
 @* Student Dashboard Page *@
 @* Has Frontend for Listing all of the Student's Classes *@
-@* Made By Sean Purnell *@
-@page "/student"
+@* Made By Sean Purnell, Shreyas Sama *@
+
+@page "/student"  
+@* URL route for this page *@
+
+@* Import necessary namespaces *@
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.EntityFrameworkCore
 @using AttendanceSystem.Data.Models
+
+@* Dependency Injection for DB context and Authentication state *@
 @inject AttendanceDbContext DbContext
 @inject AuthenticationStateProvider AuthProvider
 
+@* Sets the browser tab title *@
 <PageTitle>My Classes (Student)</PageTitle>
 
 <div class="max-w-6xl mx-auto p-6">
     <h1 class="text-3xl font-semibold text-gray-800 mb-6 text-center">My Classes</h1>
 
+    @* Message if no classes are found for the student *@
     @if (StudentClasses.Count == 0)
     {
         <p class="text-center text-red-600 font-semibold">You're not enrolled in any classes yet.</p>
@@ -21,9 +29,11 @@
     }
     else
     {
+        @* Display each class in a responsive grid layout *@
         <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             @foreach (var classItem in StudentClasses)
             {
+                @* Each class card links to its detail page *@
                 <a href="student/class/@classItem.Id" class="block no-underline text-inherit focus:outline-none focus:ring-2 focus:ring-blue-300">
                     <div class="text-gray-800 border border-gray-300 rounded-xl bg-white p-5 hover:shadow-md transition-shadow duration-200">
                         <h2 class="text-lg font-semibold mb-2">@classItem.Name</h2>
@@ -33,6 +43,7 @@
                             <p><strong>Room:</strong> @classItem.Room</p>
                         </div>
                         <div class="mt-4 flex justify-between items-center text-sm">
+                            @* Attendance percentage and status *@
                             <span>Attendance: <strong>@CalculateAttendancePercentage(classItem)%</strong></span>
                             <span class="font-medium text-@(GetAttendanceColor(classItem))">
                                 @(CalculateAttendancePercentage(classItem) >= 75 ? "Good" : "Low")
@@ -46,11 +57,11 @@
 </div>
 
 @code {
-    private List<ClassItem> StudentClasses = new();
+    private List<ClassItem> StudentClasses = new();  // List to hold classes for the student
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await AuthProvider.GetAuthenticationStateAsync();
+        var authState = await AuthProvider.GetAuthenticationStateAsync(); // Get auth state
         var user = authState.User;
 
         if (!user.Identity?.IsAuthenticated ?? true)
@@ -70,6 +81,7 @@
 
         Console.WriteLine($"Parsed studentId = {studentId}");
 
+        // Retrieve enrolled classes including attendance records
         var enrolledClasses = await DbContext.StudentCourses
             .Where(sc => sc.StudentID == studentId)
             .Join(DbContext.Classes,
@@ -85,16 +97,19 @@
             Console.WriteLine($" - Class ID: {ec.ClassID}, Name: {ec.Name}");
         }
 
+        // Get instructors' names
         var instructorIds = enrolledClasses.Select(c => c.InstructorID).Distinct().ToList();
 
         var instructorMap = await DbContext.Users
             .Where(u => instructorIds.Contains(u.UserID))
             .ToDictionaryAsync(u => u.UserID, u => $"{u.FirstName} {u.LastName}");
 
+        // Get all attendance records for this student
         var studentAttendance = await DbContext.AttendanceRecords
             .Where(ar => ar.StudentID == studentId)
             .ToListAsync();
 
+        // Map class data into ClassItem objects
         StudentClasses = enrolledClasses.Select(c => new ClassItem(
             c.ClassID,
             c.Name,
@@ -110,9 +125,9 @@
 
         Console.WriteLine($"User authenticated: {user.Identity?.IsAuthenticated}");
         Console.WriteLine($"NameIdentifier claim: {user.FindFirstValue(ClaimTypes.NameIdentifier)}");
-
     }
 
+    // Calculate percentage of classes attended 
     private double CalculateAttendancePercentage(ClassItem classItem)
     {
         if (classItem.AttendanceRecords.Count == 0) return 0;
@@ -120,12 +135,14 @@
         return Math.Round((double)presentCount / classItem.AttendanceRecords.Count * 100, 2);
     }
 
+    // Determine text color based on attendance percentage
     private string GetAttendanceColor(ClassItem classItem)
     {
         var percentage = CalculateAttendancePercentage(classItem);
         return percentage >= 75 ? "green-600" : "red-600";
     }
 
+    // Local data class for class information displayed on UI 
     public class ClassItem
     {
         public int? Id { get; set; }
