@@ -15,12 +15,11 @@
     @if (CurrentClass != null)
     {
         <h1 class="text-2xl font-bold mb-4">@CurrentClass.Name - Attendance Details</h1>
-
-// Student add attendance record section
+@* Student add attendance record section *@
         <div class="mb-4 border rounded-md shadow-sm">
             <div class="flex justify-between items-center p-4 border-b">
                 <h2 class="text-xl font-semibold">Attendance Record</h2>
-                //Show Add Attendance button only if within class time
+@* Show Add Attendance button only if within class time *@
                 @if (ShouldShowAddAttendanceButton())
                 {
                     <button type="button"
@@ -101,7 +100,7 @@
             <div style="padding-top: 1rem;"></div>
         </div>
 
-//Class information and summary
+@* Class information and summary *@
         <div class="border rounded-md shadow-sm p-4">
             <h2 class="text-xl font-semibold mb-3 border-b pb-2">Class Information</h2>
             <div class="grid md:grid-cols-2 gap-4">
